@@ -17,8 +17,6 @@
                             <p class="card-text">Quantity : {{ $p->pivot->quantity }}</p>
                         </div>
                     </div>
-
-                    <hr>
                 @endforeach
             </div>
         </div>
