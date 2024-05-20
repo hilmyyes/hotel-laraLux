@@ -59,10 +59,15 @@
 
         <section class="jumbotron text-center">
             <div class="container">
+
+                @if (@session('status'))
+                    <div class="alert alert-success">{{ session('status') }}</div>
+                @endif
                 <h1 class="jumbotron-heading">Produtcs</h1>
                 <p class="lead text-muted">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nostrum ipsam
                     distinctio nulla odit ab accusantium deleniti asperiores officiis! Praesentium commodi reprehenderit
                     adipisci tempore quaerat odit laborum fugiat quidem in qui!</p>
+                <a class="btn btn-success" href="{{ route('product.create') }}">+ new Product</a>
             </div>
         </section>
 

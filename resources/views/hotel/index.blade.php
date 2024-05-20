@@ -27,17 +27,20 @@
     <body>
 
         <div class="container">
+            <a class="btn btn-success" href="{{ route('hotel.create') }}">+ new Hotel</a>
             <h2>HOTELS</h2>
             <p>this all data from “Hotels” Table</p>
+            @if (@session('status'))
+                <div class="alert alert-success">{{ session('status') }}</div>
+            @endif
             <a class="btn btn-warning" data-toggle="modal" href="#disclaimer">Disclaimer</a>
-
             <table class="table table-striped">
                 <thead>
                     <tr>
                         {{-- <th>ID</th> --}}
                         <th>Image</th>
                         <th>Name</th>
-                        <td>List Of Product</td>
+                        <th>List Product</th>
                         <th>Address</th>
                         <th>Hotel Type</th>
                         <th>City</th>
@@ -82,9 +85,9 @@
                                             </div>
                                             <div class="modal-body">
                                                 <img src="{{ asset('images/' . $hotel->image) }}" height='200px' />
-                                                <h3><b>ALAMAT :{{ $hotel->address }}</b></h3>
-                                                <h3><b>TIPE HOTEL: {{ $hotel->type }}</b></h3>
-                                                <h3><b>CITY: {{ $hotel->city }}</b></h3>
+                                                <p>ALAMAT: {{ $hotel->address }}</p>
+                                                <p>TIPE HOTEL: {{ $hotel->type }}</p>
+                                                <p>CITY: {{ $hotel->city }}</p>
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-default"

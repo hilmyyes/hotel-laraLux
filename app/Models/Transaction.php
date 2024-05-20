@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class Transaction extends Model
 {
     use HasFactory;
+
+    protected $table = "transactions";
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');

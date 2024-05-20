@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Hotel;
+use App\Models\Type;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -24,7 +25,8 @@ class HotelController extends Controller
         //     ->get();
 
 
-        $hotels = Hotel::join('types as t', 'hotels.type_id', '=', 't.id')
+        $hotels = Hotel::orderBy('hotels.name')
+            ->join('types as t', 'hotels.type_id', '=', 't.id')
             ->select('hotels.*', 't.name as type')
             ->get();
 
@@ -38,7 +40,8 @@ class HotelController extends Controller
      */
     public function create()
     {
-        return view("hotel.create");
+        $types = Type::orderBy('name')->get();
+        return view("hotel.create", compact('types'));
     }
 
     /**
@@ -46,7 +49,23 @@ class HotelController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        //dd($request);
+
+        $request->validate([
+            'name' => 'required',
+            'city' => 'required',
+            'type' => 'required',
+        ]);
+
+        $data = new Hotel();
+        $data->name = $request->get('name');
+        $data->address = $request->get('address');
+        $data->city = $request->get('city');
+        $data->image = $request->get('image');
+        $data->type_id = $request->get('type');
+        $data->save();
+
+        return redirect('hotel')->with('status', 'Berhasil Tambah');
     }
 
     /**

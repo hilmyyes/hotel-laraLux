@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Customer;
+use App\Models\Product;
 use App\Models\Transaction;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class TransactionController extends Controller
@@ -23,7 +26,10 @@ class TransactionController extends Controller
      */
     public function create()
     {
-        //
+        $products = Product::all();
+        $users = User::orderBy('name')->get();
+        $customers = Customer::orderBy('name')->get();
+        return view("transaction.create", compact('users', 'customers', 'products'));
     }
 
     /**
@@ -31,7 +37,32 @@ class TransactionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        //dd($request);
+        $request->validate([
+            'user' => 'required',
+            'customer' => 'required',
+            'product' => 'required',
+            'quantity' => 'required',
+            'subtotal' => 'required',
+        ]);
+
+        $data = new Transaction();
+        $data->transaction_date = now();
+        $data->user_id = $request->get('user');
+        $data->customer_id = $request->get('customer');
+        $data->save();
+
+        $product = $request->get('product');
+        $quantity = $request->get('quantity');
+        $subtotal = $request->get('subtotal');
+
+        // Simpan data produk ke tabel pivot
+        $data->products()->attach($product, [
+            'quantity' => $quantity,
+            'subtotal' => $subtotal,
+        ]);
+
+        return redirect('transaction')->with('status', 'Berhasil Tambah');
     }
 
     /**

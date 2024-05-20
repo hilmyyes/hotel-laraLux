@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Type;
+
+use function PHPSTORM_META\type;
 
 class TypeController extends Controller
 {
@@ -11,7 +14,9 @@ class TypeController extends Controller
      */
     public function index()
     {
-        //
+        $data = Type::orderBy('name')->get();
+        //$data = Type::all();
+        return view('type.index', compact('data'));
     }
 
     /**
@@ -19,7 +24,7 @@ class TypeController extends Controller
      */
     public function create()
     {
-        //
+        return view('type.create');
     }
 
     /**
@@ -27,7 +32,18 @@ class TypeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+        ]);
+
+        // Type::create($request->all());
+
+        $data = new Type();
+        $data->name = $request->get('name');
+        $data->description = $request->get('desc');
+        $data->save();
+
+        return redirect('type')->with('status', 'Berhasil Tambah');
     }
 
     /**

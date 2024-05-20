@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Hotel;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
@@ -23,7 +24,8 @@ class ProductController extends Controller
      */
     public function create()
     {
-        echo "ini crate form yang baru ";
+        $datas = Hotel::orderBy('name')->get();
+        return view("product.create", compact('datas'));
     }
 
     /**
@@ -31,7 +33,22 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'price' => 'required',
+            'hotel' => 'required',
+        ]);
+
+        $data = new Product();
+        $data->name = $request->get('name');
+        $data->price = $request->get('price');
+        $data->image = $request->get('image');
+        $data->description = $request->get('desc');
+        $data->available_room = $request->get('room');
+        $data->hotel_id = $request->get('hotel');
+        $data->save();
+
+        return redirect('product')->with('status', 'Berhasil Tambah');
     }
 
     /**

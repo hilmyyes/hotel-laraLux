@@ -18,6 +18,10 @@
         <div class="container">
             <h2>DATA TRANSACTION</h2>
             <p>this all data from transaction table</p>
+            <a class="btn btn-success" href="{{ route('transaction.create') }}">+ new transaction</a>
+            @if (@session('status'))
+                <div class="alert alert-success">{{ session('status') }}</div>
+            @endif
             <table class="table table-striped">
                 <thead>
                     <tr>

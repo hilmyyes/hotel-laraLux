@@ -12,7 +12,9 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        //
+        $customers = Customer::all();
+
+        return view('customer.index', ['customers' => $customers]);
     }
 
     /**
@@ -20,7 +22,7 @@ class CustomerController extends Controller
      */
     public function create()
     {
-        //
+        return view('customer.create');
     }
 
     /**
@@ -28,7 +30,19 @@ class CustomerController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'address' => 'required'
+        ]);
+
+        // Type::create($request->all());
+
+        $data = new Customer();
+        $data->name = $request->get('name');
+        $data->address = $request->get('address');
+        $data->save();
+
+        return redirect('customer')->with('status', 'Berhasil Tambah');
     }
 
     /**

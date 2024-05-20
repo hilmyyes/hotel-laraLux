@@ -54,7 +54,6 @@ Route::resource('customer', CustomerController::class);
 
 Route::resource('type', TypeController::class);
 
-
 Route::post('transaction/showDataAjax/', [TransactionController::class, 'showAjax'])->name('transaction.showAjax');
 
 Route::get('/report/availableHotelRooms', [HotelController::class, 'availableHotelRoom'])->name('reportShowHotel');
@@ -66,3 +65,4 @@ Route::view('ajaxExample', 'hotel.ajax');
 Route::post("/hotel/showInfo", [HotelController::class, 'showInfo'])->name("hotels.showInfo");
 
 Route::post('/hotel/showProducts', [HotelController::class, 'showProducts'])->name('hotel.showProducts');
+ 
