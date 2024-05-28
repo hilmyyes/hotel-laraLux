@@ -58,7 +58,8 @@ class CustomerController extends Controller
      */
     public function edit(Customer $customer)
     {
-        //
+        $data = $customer;
+        return view('customer.edit', compact('data'));
     }
 
     /**
@@ -66,7 +67,11 @@ class CustomerController extends Controller
      */
     public function update(Request $request, Customer $customer)
     {
-        //
+        $updatedData = $customer;
+        $updatedData->name = $request->name;
+        $updatedData->address = $request->address;
+        $updatedData->save();
+        return redirect()->route('customer.index')->with('status', 'Horray ! Your data is successfully updated !');
     }
 
     /**
@@ -74,6 +79,15 @@ class CustomerController extends Controller
      */
     public function destroy(Customer $customer)
     {
-        //
+        try {
+            $deletedData = $customer;
+            //dd($deletedData);
+            $deletedData->delete();
+            return redirect()->route('customer.index')->with('status', 'Horray ! Your data is successfully deleted !');
+        } catch (\PDOException $ex) {
+
+            $msg = "Failed to delete data ! Make sure there is no related data before deleting it";
+            return redirect()->route('customer.index')->with('status', $msg);
+        }
     }
 }

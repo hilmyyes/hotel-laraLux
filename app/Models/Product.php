@@ -6,9 +6,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends Model
 {
+    use HasFactory;
+    use SoftDeletes;
+
+    
     // tujuan nya adalah untuk ngambil data hotel pada database karena hotel 1:n product, maka kita gunakan belongsTo
     public function hotel(): BelongsTo
     {

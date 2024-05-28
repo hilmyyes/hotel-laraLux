@@ -97,6 +97,11 @@
                                     </div>
                                 </div>
                             </td>
+                            <td>
+                                @if ($hotel->typeWithTrashed)
+                                    {{ $hotel->typeWithTrashed->name }}
+                                @endif
+                            </td>
 
                         </tr>
                     @endforeach

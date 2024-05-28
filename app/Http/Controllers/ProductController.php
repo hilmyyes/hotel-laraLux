@@ -64,24 +64,52 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Product $product)
     {
-        //
+        // Ambil nama hotel dari id hotel_id yang ada di tabel product
+        $hotel = Hotel::find($product->hotel_id);
+
+        // Ambil semua data hotels untuk dropdown atau keperluan lainnya
+        $datas = Hotel::orderBy('name')->get();
+
+        // Ambil data produk yang sedang diedit
+        $data = $product;
+
+        // Mengembalikan view dengan data yang dibutuhkan
+        return view('product.edit', compact('data', 'datas', 'hotel'));
     }
+
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Product $product)
     {
-        //
+        $updatedData = $product;
+        $updatedData->name = $request->name;
+        $updatedData->price = $request->price;
+        $updatedData->image = $request->image;
+        $updatedData->description = $request->desc;
+        $updatedData->available_room = $request->room;
+        $updatedData->hotel_id = $request->hotel;
+        $updatedData->save();
+        return redirect()->route('product.index')->with('status', 'Horray ! Your data is successfully updated !');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Product $product)
     {
-        //
+        try {
+            $deletedData = $product;
+            //dd($deletedData);
+            $deletedData->delete();
+            return redirect()->route('product.index')->with('status', 'Horray ! Your data is successfully deleted !');
+        } catch (\PDOException $ex) {
+
+            $msg = "Failed to delete data ! Make sure there is no related data before deleting it";
+            return redirect()->route('product.index')->with('status', $msg);
+        }
     }
 }

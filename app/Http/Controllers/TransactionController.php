@@ -78,23 +78,58 @@ class TransactionController extends Controller
      */
     public function edit(Transaction $transaction)
     {
-        //
+        $data = $transaction;
+        $products = Product::all();
+        $users = User::orderBy('name')->get();
+        $customers = Customer::orderBy('name')->get();
+        $transactionProduct = $transaction->products()->first(); // Mengambil produk dari pivot table
+
+        return view('transaction.edit', compact('data', 'products', 'users', 'customers', 'transactionProduct'));
     }
+
 
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, Transaction $transaction)
     {
-        //
+        // Perbarui data transaksi
+        $transaction->user_id = $request->user;
+        $transaction->customer_id = $request->customer;
+        $transaction->save();
+
+        $product = $request->product;
+        $quantity = $request->quantity;
+        $subtotal = $request->subtotal;
+
+        // Perbarui data pivot
+        $transaction->products()->syncWithoutDetaching([
+            $product => [
+                'quantity' => $quantity,
+                'subtotal' => $subtotal,
+            ]
+        ]);
+
+        // Redirect ke halaman index dengan pesan sukses
+        return redirect()->route('transaction.index')->with('status', 'Transaction updated successfully!');
     }
+
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(Transaction $transaction)
     {
-        //
+        try {
+            $deletedData = $transaction;
+            //dd($deletedData);
+            $deletedData->delete();
+            return redirect()->route('transaction.index')->with('status', 'Horray ! Your data is successfully deleted !');
+        } catch (\PDOException $ex) {
+
+            $msg = "Failed to delete data ! Make sure there is no related data before deleting it";
+            return redirect()->route('transaction.index')->with('status', $msg);
+        }
     }
 
 

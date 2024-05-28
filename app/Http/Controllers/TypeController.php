@@ -57,24 +57,39 @@ class TypeController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Type $type)
     {
-        //
+        //dd($type);
+        $data = $type;
+        return view('type.edit', compact('data'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Type $type)
     {
-        //
+        $updatedData = $type;
+        $updatedData->name = $request->name;
+        $updatedData->description = $request->desc;
+        $updatedData->save();
+        return redirect()->route('type.index')->with('status', 'Horray ! Your data is successfully updated !');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Type $type)
     {
-        //
+        try {
+            $deletedData = $type;
+            //dd($deletedData);
+            $deletedData->delete();
+            return redirect()->route('type.index')->with('status', 'Horray ! Your data is successfully deleted !');
+        } catch (\PDOException $ex) {
+
+            $msg = "Failed to delete data ! Make sure there is no related data before deleting it";
+            return redirect()->route('type.index')->with('status', $msg);
+        }
     }
 }

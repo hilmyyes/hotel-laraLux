@@ -6,10 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Hotel extends Model
 {
     use HasFactory;
+    use SoftDeletes;
 
     protected $table = "hotels"; // ini gunanya untuk overide database agar bisa di baca
     //dan liat di slide
@@ -25,4 +27,10 @@ class Hotel extends Model
     {
         return $this->belongsTo(Type::class, 'type_id'); // hotel_id untuk merujuk pada id hotel yang akan di tuju
     }
+
+    public function typeWithTrashed(): BelongsTo
+    {
+        return $this->belongsTo(Type::class, 'type_id')->withTrashed();
+    }
+
 }

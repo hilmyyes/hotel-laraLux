@@ -60,14 +60,15 @@
         <section class="jumbotron text-center">
             <div class="container">
 
-                @if (@session('status'))
-                    <div class="alert alert-success">{{ session('status') }}</div>
-                @endif
+
                 <h1 class="jumbotron-heading">Produtcs</h1>
                 <p class="lead text-muted">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nostrum ipsam
                     distinctio nulla odit ab accusantium deleniti asperiores officiis! Praesentium commodi reprehenderit
                     adipisci tempore quaerat odit laborum fugiat quidem in qui!</p>
                 <a class="btn btn-success" href="{{ route('product.create') }}">+ new Product</a>
+                @if (@session('status'))
+                    <div class="alert alert-success">{{ session('status') }}</div>
+                @endif
             </div>
         </section>
 
@@ -84,10 +85,15 @@
                                     <p class="card-text">{{ $p->description }}</p>
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div class="btn-group">
-                                            <button type="button"
-                                                class="btn btn-sm btn-outline-secondary">View</button>
-                                            <button type="button"
-                                                class="btn btn-sm btn-outline-secondary">Edit</button>
+                                            <a class="btn btn-sm btn-outline-secondary"
+                                                href="{{ route('product.edit', $p->id) }}">Edit</a>
+                                            <form method="POST" action="{{ route('product.destroy', $p->id) }}">
+                                                @csrf
+                                                @method('DELETE')
+                                                <input type="submit" value="delete"
+                                                    class="btn btn-sm btn-outline-secondary"
+                                                    onclick="return confirm('Are you sure to delete {{ $p->id }} - {{ $p->name }} ? ');">
+                                            </form>
                                         </div>
                                         <small class="text-muted">Price: {{ $p->price }}</small>
                                     </div>

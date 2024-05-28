@@ -39,7 +39,15 @@
                             <td>{{ $d->customer->name }}</td>
                             <td>{{ $d->user->name }}</td>
                             <td>{{ $d->created_at }}</td>
-                            <td><a class="btn btn-default" data-toggle="modal" href="#myModal"
+                            <td>
+                                <a class="btn btn-warning" href="{{ route('transaction.edit', $d->id) }}">Edit</a>
+                                <form method="POST" action="{{ route('transaction.destroy', $d->id) }}">
+                                    @csrf
+                                    @method('DELETE')
+                                    <input type="submit" value="delete" class="btn btn-danger"
+                                        onclick="return confirm('Are you sure to delete {{ $d->id }} - {{ $d->name }} ? ');">
+                                </form>
+                                <a class="btn btn-default" data-toggle="modal" href="#myModal"
                                     onclick="getDetailData({{ $d->id }});">Lihat Rincian Pembelian</a>
                             </td>
                         </tr>

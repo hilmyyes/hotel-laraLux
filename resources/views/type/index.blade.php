@@ -32,6 +32,8 @@
                         <th>Description</th>
                         <th>Creted</th>
                         <th>Updated</th>
+                        <th>Action</th>
+
                     </tr>
                 </thead>
                 <tbody>
@@ -42,6 +44,16 @@
                             <td>{{ $d->description }}</td>
                             <td>{{ $d->created_at }}</td>
                             <td>{{ $d->updated_at }}</td>
+                            <td>
+                                <a class="btn btn-warning" href="{{ route('type.edit', $d->id) }}">Edit</a>
+                                <form method="POST" action="{{ route('type.destroy', $d->id) }}">
+                                    @csrf
+                                    @method('DELETE')
+                                    <input type="submit" value="delete" class="btn btn-danger"
+                                        onclick="return confirm('Are you sure to delete {{ $d->id }} - {{ $d->name }} ? ');">
+                                </form>
+                            </td>
+
                         </tr>
                     @endforeach
                 </tbody>
