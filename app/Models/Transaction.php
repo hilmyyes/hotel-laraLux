@@ -24,7 +24,7 @@ class Transaction extends Model
         return $this->belongsTo(Customer::class, 'customer_id');
     }
 
-    public function s(): BelongsToMany
+    public function products(): BelongsToMany
     {
         return $this->belongsToMany(Product::class, 'Product_transaction', 'transaction_id', 'product_id')->withPivot('quantity', 'subtotal'); // hotel_id untuk merujuk pada id hotel yang akan di tuju
     }

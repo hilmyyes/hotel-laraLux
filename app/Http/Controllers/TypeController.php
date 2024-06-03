@@ -92,4 +92,48 @@ class TypeController extends Controller
             return redirect()->route('type.index')->with('status', $msg);
         }
     }
+
+    public function getEditForm(Request $request)
+    {
+        $id = $request->id;
+        $data = Type::find($id);
+        return response()->json(array(
+            'status' => 'oke',
+            'msg' => view('type.getEditForm', compact('data'))->render()
+        ), 200);
+    }
+
+    public function getEditFormB(Request $request)
+    {
+        $id = $request->id;
+        $data = Type::find($id);
+        return response()->json(array(
+            'status' => 'oke',
+            'msg' => view('type.getEditFormB', compact('data'))->render()
+        ), 200);
+    }
+
+    public function saveDataTD(Request $request)
+    {
+        $id = $request->id;
+        $data = Type::find($id);
+        $data->name = $request->name;
+        $data->description = $request->description;
+        $data->save();
+        return response()->json(array(
+            'status' => 'oke',
+            'msg' => 'type data is up-to-date !'
+        ), 200);
+    }
+
+    public function deleteData(Request $request)
+    {
+        $id = $request->id;
+        $data = Type::find($id);
+        $data->delete();
+        return response()->json(array(
+            'status' => 'oke',
+            'msg' => 'type data is removed !'
+        ), 200);
+    }
 }

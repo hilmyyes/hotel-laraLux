@@ -65,4 +65,23 @@ Route::view('ajaxExample', 'hotel.ajax');
 Route::post("/hotel/showInfo", [HotelController::class, 'showInfo'])->name("hotels.showInfo");
 
 Route::post('/hotel/showProducts', [HotelController::class, 'showProducts'])->name('hotel.showProducts');
- 
+
+Route::post('customtype/getEditForm', [TypeController::class, 'getEditForm'])->name('type.getEditForm');
+
+Route::post('customtype/getEditFormB', [TypeController::class, 'getEditFormB'])->name('type.getEditFormB');
+
+Route::post('customtype/saveDataTD', [TypeController::class, 'saveDataTD'])->name('type.saveDataTD');
+
+Route::post('customtype/deleteData', [TypeController::class, 'deleteData'])->name('type.deleteData');
+
+Route::post('customcustomer/getEditForm', [CustomerController::class, 'getEditForm'])->name('customer.getEditForm');
+
+Route::post('customcustomer/deleteData', [CustomerController::class, 'deleteData'])->name('customer.deleteData');
+
+Route::post('customproduct/getEditForm', [ProductController::class, 'getEditForm'])->name('product.getEditForm');
+
+Route::post('customproduct/deleteData', [ProductController::class, 'deleteData'])->name('product.deleteData');
+
+Route::post('customtransaction/getEditForm', [TransactionController::class, 'getEditForm'])->name('transaction.getEditForm');
+
+Route::post('customtransaction/deleteData', [TransactionController::class, 'deleteData'])->name('transaction.deleteData');

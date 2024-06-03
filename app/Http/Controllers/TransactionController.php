@@ -16,7 +16,10 @@ class TransactionController extends Controller
     public function index()
     {
         $transaction = Transaction::all();
-        return view('transaction.index', ['data' => $transaction]);
+        $products = Product::all();
+        $users = User::orderBy('name')->get();
+        $customers = Customer::orderBy('name')->get();
+        return view('transaction.index', compact('transaction', 'users', 'customers', 'products'));
     }
 
     /**
@@ -132,7 +135,6 @@ class TransactionController extends Controller
         }
     }
 
-
     public function showAjax(Request $request)
     {
         $id = ($request->get('id'));
@@ -140,6 +142,31 @@ class TransactionController extends Controller
         $products = $data->products;
         return response()->json(array(
             'msg' => view('transaction.showModal', compact('data', 'products'))->render()
+        ), 200);
+    }
+
+    public function getEditForm(Request $request)
+    {
+        $id = $request->id;
+        $data = Transaction::find($id);
+        $products = Product::all();
+        $users = User::orderBy('name')->get();
+        $customers = Customer::orderBy('name')->get();
+        $transactionProduct = $data->products()->first();
+        return response()->json(array(
+            'status' => 'oke',
+            'msg' => view('transaction.getEditForm', compact('data', 'products', 'users', 'customers', 'transactionProduct'))->render()
+        ));
+    }
+
+    public function deleteData(Request $request)
+    {
+        $id = $request->id;
+        $data = Transaction::find($id);
+        $data->delete();
+        return response()->json(array(
+            'status' => 'oke',
+            'msg' => 'type data is removed !'
         ), 200);
     }
 }

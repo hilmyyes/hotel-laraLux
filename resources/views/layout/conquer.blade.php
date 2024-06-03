@@ -52,8 +52,6 @@ License: You must have a valid license purchased only from themeforest(the above
     <link href="{{ asset('conquer/css/custom.css') }}" rel="stylesheet" type="text/css" />
     <!-- END THEME STYLES -->
     <link rel="shortcut icon" href="favicon.ico" />
-
-    @yield('javascript')
 </head>
 <!-- END HEAD -->
 <!-- BEGIN BODY -->
@@ -977,8 +975,10 @@ License: You must have a valid license purchased only from themeforest(the above
             Tasks.initDashboardWidget();
         });
     </script>
+
+    @yield('javascript')
     <!-- END JAVASCRIPTS -->
-   
+
 </body>
 <!-- END BODY -->
 

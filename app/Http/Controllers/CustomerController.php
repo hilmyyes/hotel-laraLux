@@ -90,4 +90,25 @@ class CustomerController extends Controller
             return redirect()->route('customer.index')->with('status', $msg);
         }
     }
+
+    public function getEditForm(Request $request)
+    {
+        $id = $request->id;
+        $data = Customer::find($id);
+        return response()->json(array(
+            'status' => 'oke',
+            'msg' => view('customer.getEditForm', compact('data'))->render()
+        ), 200);
+    }
+
+    public function deleteData(Request $request)
+    {
+        $id = $request->id;
+        $data = Customer::find($id);
+        $data->delete();
+        return response()->json(array(
+            'status' => 'oke',
+            'msg' => 'type data is removed !'
+        ), 200);
+    }
 }

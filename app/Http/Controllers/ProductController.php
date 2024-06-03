@@ -14,9 +14,13 @@ class ProductController extends Controller
     public function index()
     {
         $products = Product::all();
+        $hotels = Hotel::orderBy('name')->get();
         // var_dump($products);exit;
         // dd($products);
-        return view('product.index', ['products' => $products]);
+        return view('product.index', [
+            'products' => $products,
+            'hotels' => $hotels
+        ]);
     }
 
     /**
@@ -66,6 +70,7 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
+        //dd($product);
         // Ambil nama hotel dari id hotel_id yang ada di tabel product
         $hotel = Hotel::find($product->hotel_id);
 
@@ -111,5 +116,28 @@ class ProductController extends Controller
             $msg = "Failed to delete data ! Make sure there is no related data before deleting it";
             return redirect()->route('product.index')->with('status', $msg);
         }
+    }
+
+    public function getEditForm(Request $request)
+    {
+        $id = $request->id;
+        $data = Product::find($id);
+        $hotel = Hotel::find($data->hotel_id);
+        $hotels = Hotel::orderBy('name')->get();
+        return response()->json(array(
+            'status' => 'oke',
+            'msg' => view('product.getEditForm', compact('data', 'hotel', 'hotels'))->render()
+        ), 200);
+    }
+
+    public function deleteData(Request $request)
+    {
+        $id = $request->id;
+        $data = Product::find($id);
+        $data->delete();
+        return response()->json(array(
+            'status' => 'oke',
+            'msg' => 'type data is removed !'
+        ), 200);
     }
 }
