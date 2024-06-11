@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Type;
+use Illuminate\Support\Facades\Auth;
 
 use function PHPSTORM_META\type;
 
@@ -81,6 +82,9 @@ class TypeController extends Controller
      */
     public function destroy(Type $type)
     {
+        $user = Auth::user();
+        $this->authorize('delete-permission', $user);
+
         try {
             $deletedData = $type;
             //dd($deletedData);

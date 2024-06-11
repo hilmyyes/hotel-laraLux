@@ -438,7 +438,7 @@ License: You must have a valid license purchased only from themeforest(the above
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown"
                         data-close-others="true">
                         <img alt="" src="{{ asset('conquer/img/avatar3_small.jpg') }}" />
-                        <span class="username username-hide-on-mobile">Nick </span>
+                        <span class="username username-hide-on-mobile">{{ Auth::user()->name }}</span>
                         <i class="fa fa-angle-down"></i>
                     </a>
                     <ul class="dropdown-menu">
@@ -462,7 +462,18 @@ License: You must have a valid license purchased only from themeforest(the above
                         <li class="divider">
                         </li>
                         <li>
-                            <a href="login.html"><i class="fa fa-key"></i> Log Out</a>
+
+                            <a class="dropdown-item" href="{{ route('logout') }}"
+                                onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();">
+                                <i class="fa fa-key"></i> {{ __('Logout') }}
+                            </a>
+
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                @csrf
+                            </form>
+
+
                         </li>
                     </ul>
                 </li>

@@ -7,6 +7,7 @@ use App\Http\Controllers\Customer;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\Transaction;
 use App\Http\Controllers\TransactionController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -41,18 +42,17 @@ Route::get('/contact', function () {
     return view('contact');
 })->name('contact');
 
+Route::middleware(['auth'])->group(function () {
+    Route::resource('hotel', HotelController::class);
 
+    Route::resource('product', ProductController::class);
 
+    Route::resource('transaction', TransactionController::class);
 
-Route::resource('hotel', HotelController::class);
+    Route::resource('customer', CustomerController::class);
+});
 
-Route::resource('product', ProductController::class);
-
-Route::resource('transaction', TransactionController::class);
-
-Route::resource('customer', CustomerController::class);
-
-Route::resource('type', TypeController::class);
+Route::resource('type', TypeController::class)->middleware('auth');
 
 Route::post('transaction/showDataAjax/', [TransactionController::class, 'showAjax'])->name('transaction.showAjax');
 
@@ -85,3 +85,7 @@ Route::post('customproduct/deleteData', [ProductController::class, 'deleteData']
 Route::post('customtransaction/getEditForm', [TransactionController::class, 'getEditForm'])->name('transaction.getEditForm');
 
 Route::post('customtransaction/deleteData', [TransactionController::class, 'deleteData'])->name('transaction.deleteData');
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

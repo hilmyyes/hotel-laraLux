@@ -40,17 +40,18 @@
                                 onclick="getEditForm({{ $d->id }})">Edit Type A</a>
                             <a href="#modalEditB" class="btn btn-info" data-toggle="modal"
                                 onclick="getEditFormB({{ $d->id }})">Edit Type B</a>
+                            @can('delete-permission', Auth::user())
+                                <a href="#" value="DeleteNoReload" class="btn btn-danger"
+                                    onclick="if(confirm('Are you sure to delete {{ $d->id }} - {{ $d->name }} ? ')) deleteDataRemoveTR({{ $d->id }})">Delete
+                                    without Reload</a>
 
-                            <a href="#" value="DeleteNoReload" class="btn btn-danger"
-                                onclick="if(confirm('Are you sure to delete {{ $d->id }} - {{ $d->name }} ? ')) deleteDataRemoveTR({{ $d->id }})">Delete
-                                without Reload</a>
-
-                            <form method="POST" action="{{ route('type.destroy', $d->id) }}" style="display:inline;">
-                                @csrf
-                                @method('DELETE')
-                                <input type="submit" value="delete" class="btn btn-danger"
-                                    onclick="return confirm('Are you sure to delete {{ $d->id }} - {{ $d->name }} ? ');">
-                            </form>
+                                <form method="POST" action="{{ route('type.destroy', $d->id) }}" style="display:inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <input type="submit" value="delete" class="btn btn-danger"
+                                        onclick="return confirm('Are you sure to delete {{ $d->id }} - {{ $d->name }} ? ');">
+                                </form>
+                            @endcan
                         </td>
                     </tr>
                 @endforeach
