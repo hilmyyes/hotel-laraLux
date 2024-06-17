@@ -29,7 +29,6 @@ Route::get('/kategori', function () {
     return view('kategori');
 })->name('kategori');
 
-
 Route::get('/kategori/single', function () {
     return view('single');
 })->name('single');
@@ -51,6 +50,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::resource('customer', CustomerController::class);
 });
+
 
 Route::resource('type', TypeController::class)->middleware('auth');
 
@@ -89,3 +89,17 @@ Route::post('customtransaction/deleteData', [TransactionController::class, 'dele
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::get('hotel/uploadLogo/{hotel_id}', [HotelController::class, 'uploadLogo'])->name('hotel.uploadLogo');
+
+Route::post('hotel/simpanLogo', [HotelController::class, 'simpanLogo'])->name('hotel.simpanLogo');
+
+Route::get('hotel/uploadPhoto/{hotel_id}', [HotelController::class, 'uploadPhoto'])->name('hotel.uploadPhoto');
+
+Route::post('hotel/simpanPhoto', [HotelController::class, 'simpanPhoto'])->name('hotel.simpanPhoto');
+
+Route::get('product/uploadPhoto/{product_id}', [ProductController::class, 'uploadPhoto'])->name('product.uploadPhoto');
+
+Route::post('product/simpanPhoto', [ProductController::class, 'simpanPhoto'])->name('product.simpanPhoto');
+
+Route::post('product/delPhoto', [ProductController::class, 'delPhoto']);

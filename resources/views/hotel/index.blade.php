@@ -38,8 +38,9 @@
                 <thead>
                     <tr>
                         {{-- <th>ID</th> --}}
-                        <th>Image</th>
                         <th>Name</th>
+                        <th>Image</th>
+                        <th>Logo</th>
                         <th>List Product</th>
                         <th>Address</th>
                         <th>Hotel Type</th>
@@ -52,9 +53,20 @@
                         <tr>
                             {{-- <td>{{ $hotel->id }}</td> --}}
                             {{-- <td><img src="{{ $hotel->image }}" alt=""></td> --}}
-                            <td><img src="{{ asset('images/' . $hotel->image) }}" alt=""></td>
-
                             <td>{{ $hotel->name }}</td>
+                            <td>
+                                {{-- <img src="{{ asset('images/' . $hotel->image) }}" alt=""> --}}
+
+                                <img height='100px' src="{{ asset('images/' . $hotel->image) }}" /><br>
+                                <a href="{{ url('hotel/uploadPhoto/' . $hotel->id) }}">
+                                    <button class='btn btn-xs btn-default'>upload</button></a>
+                            </td>
+                            <td>
+                                <img height='100px' src="{{ asset('logo/' . $hotel->id . '.jpg') }}" /><br>
+                                <a href="{{ url('hotel/uploadLogo/' . $hotel->id) }}">
+                                    <button class='btn btn-xs btn-default'>upload</button></a>
+                            </td>
+
 
                             <td>
                                 @foreach ($hotel->products as $p)

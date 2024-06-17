@@ -44,10 +44,17 @@
         <div class="album py-5 bg-light">
             <div class="container">
                 <div class="row">
-                    @foreach ($products as $p)
+                    @foreach ($rs as $p)
                         <div class="col-md-4">
                             <div class="card mb-4 shadow-sm" id="tr_{{ $p->id }}">
-                                <img class="card-img-top" src="{{ asset('images/' . $p->image) }}">
+                                @if ($p->filenames)
+                                    @foreach ($p->filenames as $filename)
+                                        <img src="{{ asset('products/' . $p->id . '/' . $filename) }}" /><br>
+                                    @endforeach
+                                @endif
+                                <a href="{{ url('product/uploadPhoto/' . $p->id) }}">
+                                    <button class='btn btn-xs btn-default'>upload</button></a>
+
                                 <div class="card-body">
                                     <h5 class="card-title">{{ $p->name }}</h5>
                                     <h7>{{ $p->hotel->name }}</h7>
@@ -112,7 +119,8 @@
                             <label for="price">Price of Product</label>
                             <input type="text" name="price" class="form-control" id="priceProduct"
                                 aria-describedby="priceHelp" placeholder="Enter Price of Product">
-                            <small id="priceHelp" class="form-text text-muted">Please write down your data here</small>
+                            <small id="priceHelp" class="form-text text-muted">Please write down your data
+                                here</small>
                         </div>
                         <div class="form-group">
                             <label for="image">Image of Product</label>

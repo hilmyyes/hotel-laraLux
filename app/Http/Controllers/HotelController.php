@@ -159,4 +159,60 @@ class HotelController extends Controller
             'msg' => view('hotel.showProducts', compact('nama', 'data'))->render()
         ), 200);
     }
+
+    public function uploadLogo(Request $request)
+    {
+        $hotel_id = $request->hotel_id;
+        $hotel = Hotel::find($hotel_id);
+        return view('hotel.formUploadLogo', compact('hotel'));
+    }
+
+    public function simpanLogo(Request $request)
+    {
+        $file = $request->file("file_logo");
+        $folder = 'logo';
+        $filename = $request->hotel_id . ".jpg";
+        $file->move($folder, $filename);
+        return redirect()->route('hotel.index')->with('status', 'logo terupload');
+    }
+
+    public function uploadPhoto(Request $request)
+    {
+        $hotel_id = $request->hotel_id;
+        $hotel = Hotel::find($hotel_id);
+        return view('hotel.formUploadPhoto', compact('hotel'));
+    }
+
+    public function simpanPhoto(Request $request)
+    {
+        // Validasi bahwa file diunggah
+        if (!$request->hasFile('file_photo')) {
+            return redirect()->back()->with('error', 'File tidak ditemukan.');
+        }
+
+        $file = $request->file('file_photo');
+
+        // Validasi bahwa file benar-benar diunggah
+        if (!$file->isValid()) {
+            return redirect()->back()->with('error', 'File tidak valid.');
+        }
+
+        $folder = 'images';
+        $filename = time() . "_" . $file->getClientOriginalName();
+
+        // Pindahkan file ke folder tujuan
+        $file->move($folder, $filename);
+
+        // Temukan hotel berdasarkan ID dan perbarui gambar
+        $hotel = Hotel::find($request->hotel_id);
+
+        if (!$hotel) {
+            return redirect()->back()->with('error', 'Hotel tidak ditemukan.');
+        }
+
+        $hotel->image = $filename;
+        $hotel->save();
+
+        return redirect()->route('hotel.index')->with('status', 'Photo berhasil diunggah.');
+    }
 }
