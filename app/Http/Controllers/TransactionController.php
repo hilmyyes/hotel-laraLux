@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cart;
 use App\Models\Customer;
 use App\Models\Product;
+use App\Models\ProductTransaction;
 use App\Models\Transaction;
 use App\Models\User;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TransactionController extends Controller
 {
@@ -40,32 +44,31 @@ class TransactionController extends Controller
      */
     public function store(Request $request)
     {
-        //dd($request);
-        $request->validate([
-            'user' => 'required',
-            'customer' => 'required',
-            'product' => 'required',
-            'quantity' => 'required',
-            'subtotal' => 'required',
-        ]);
+        try {
+            $data = new Transaction;
+            $data->user_id = Auth::id();
+            $data->save();
 
-        $data = new Transaction();
-        $data->transaction_date = now();
-        $data->user_id = $request->get('user');
-        $data->customer_id = $request->get('customer');
-        $data->save();
+            $transactionId = $data->id;
+            $carts = Cart::where('user_id', Auth::id())->get();
 
-        $product = $request->get('product');
-        $quantity = $request->get('quantity');
-        $subtotal = $request->get('subtotal');
+            foreach ($carts as $c) {
+                $newProdTrans = new ProductTransaction();
+                $newProdTrans->product_id = $c['id'];
+                $newProdTrans->transaction_id = $transactionId;
+                $newProdTrans->checkin_date = $c['checkin_date'];
+                $newProdTrans->duration = $c['duration'];
+                $newProdTrans->subtotal = $c['subtotal'];
+                $newProdTrans->save();
+            }
 
-        // Simpan data produk ke tabel pivot
-        $data->products()->attach($product, [
-            'quantity' => $quantity,
-            'subtotal' => $subtotal,
-        ]);
+            Cart::where('user_id', Auth::id())->delete();
 
-        return redirect('transaction')->with('status', 'Berhasil Tambah');
+            return redirect("cart/")->with('status', 'Berhasil Tambah');
+
+        } catch (QueryException $e) {
+            return back()->withInput()->withErrors(['error' => 'Error storing cart item: ' . $e->getMessage()]);
+        }
     }
 
     /**
@@ -140,9 +143,12 @@ class TransactionController extends Controller
         $id = ($request->get('id'));
         $data = Transaction::find($id);
         $products = $data->products;
-        return response()->json(array(
-            'msg' => view('transaction.showModal', compact('data', 'products'))->render()
-        ), 200);
+        return response()->json(
+            array(
+                'msg' => view('transaction.showModal', compact('data', 'products'))->render()
+            ),
+            200
+        );
     }
 
     public function getEditForm(Request $request)
@@ -153,10 +159,12 @@ class TransactionController extends Controller
         $users = User::orderBy('name')->get();
         $customers = Customer::orderBy('name')->get();
         $transactionProduct = $data->products()->first();
-        return response()->json(array(
-            'status' => 'oke',
-            'msg' => view('transaction.getEditForm', compact('data', 'products', 'users', 'customers', 'transactionProduct'))->render()
-        ));
+        return response()->json(
+            array(
+                'status' => 'oke',
+                'msg' => view('transaction.getEditForm', compact('data', 'products', 'users', 'customers', 'transactionProduct'))->render()
+            )
+        );
     }
 
     public function deleteData(Request $request)
@@ -164,9 +172,23 @@ class TransactionController extends Controller
         $id = $request->id;
         $data = Transaction::find($id);
         $data->delete();
-        return response()->json(array(
-            'status' => 'oke',
-            'msg' => 'type data is removed !'
-        ), 200);
+        return response()->json(
+            array(
+                'status' => 'oke',
+                'msg' => 'type data is removed !'
+            ),
+            200
+        );
+    }
+
+    public function insertProducts($cart, $user)
+    {
+        $total = 0;
+        foreach ($cart as $c) {
+            # code...
+            $subtotal = $c['quantity'] * $c['price'];
+            $total += $subtotal;
+            $this->products()->attach($c['id'], ['quantity' => $c['quantity'], 'subtotal' => $subtotal]);
+        }
     }
 }

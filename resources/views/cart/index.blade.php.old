@@ -1,0 +1,230 @@
+@extends('layout.conquer')
+
+@section('content')
+    <!DOCTYPE html>
+    <html lang="en">
+
+    <div class="page-content">
+        <h3 class="page-title">
+            Input Buyers
+        </h3>
+        <div class="page-bar">
+            <ul class="page-breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="index.html">Home</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <a href="#">Example</a>
+                </li>
+                <li>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a href="#" onclick="showInfo()">
+                        <i class="icon-bulb"></i>
+                    </a>
+                </li>
+            </ul>
+            <div class="page-toolbar"> </div>
+        </div>
+
+        <form method="POST" action="{{ route('home') }}" onsubmit="PrepareProductData()">
+            @csrf
+            <input type="hidden" name="user_id" id="user_id" value="{{ Auth::user()->id }}">
+            <input type="hidden" name="product_data" id="product_data">
+
+            <div class="form-group">
+                <label for="Product_Id">Room</label>
+                <select class="form-control" name="Product_Id" id="Product_Id" onchange="UpdateSub()">
+                    @foreach ($rooms as $r)
+                        <option value="{{ $r->id }}" data-name="{{ $r->name }}"
+                            data-price="{{ $r->price }}">
+                            {{ $r->name }} - {{ $r->price }}</option>
+                    @endforeach
+                </select><br>
+
+                <label for="CheckIn">Check-In Date</label>
+                <input type="date" class="form-control" id="CheckIn" value="<?php echo date('Y-m-d', strtotime('now')); ?>"
+                    min="<?php echo date('Y-m-d', strtotime('now')); ?>" onchange="UpdateCheckOut()"><br>
+
+                <label for="Duration">Duration</label>
+                <input type="number" class="form-control" name="Duration" id="Duration" onchange="UpdateCheckOut()"
+                    placeholder="Enter Stay Duration" value="1" min="1"><br>
+
+                <label>CheckOut: </label><label id="CheckOut"></label><br><br>
+
+                <label for="SubTotal">Sub Total</label>
+                <input type="number" class="form-control" name="SubTotal" id="SubTotal" disabled><br>
+            </div>
+
+            <button type="button" class="btn btn-primary" onclick="AddProduct()">Add</button>
+
+
+            <table class="table" id="Product-Table">
+                <thead>
+                    <tr>
+                        <th>Prod Id</th>
+                        <th>Prod Name</th>
+                        <th>Price</th>
+                        <th>Check-In Date</th>
+                        <th>Duration</th>
+                        <th>Check-Out Date</th>
+                        <th>Sub Total</th>
+                        <th>Action</th>
+
+                    </tr>
+
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+@endsection
+
+
+@section('javascript')
+    <script>
+        var products = [];
+
+        function UpdateCheckOut() {
+            var checkInDate = document.getElementById("CheckIn").value;
+            var duration = parseInt(document.getElementById("Duration").value);
+
+            if (checkInDate && duration) {
+                var date = new Date(checkInDate);
+                date.setDate(date.getDate() + duration);
+
+                var dd = String(date.getDate()).padStart(2, '0');
+                var mm = String(date.getMonth() + 1).padStart(2, '0');
+                var yyyy = date.getFullYear();
+
+                var newDate = dd + '/' + mm + '/' + yyyy;
+                document.getElementById("CheckOut").innerText = newDate;
+
+                UpdateSub();
+            }
+        }
+
+        function AddProduct() {
+            event.preventDefault();
+
+            var product_Select = document.getElementById('Product_Id');
+            var selectedOption = product_Select.options[product_Select.selectedIndex];
+
+            var newId = parseInt(selectedOption.value);
+            var newName = selectedOption.getAttribute('data-name');
+            var newPrice = parseFloat(selectedOption.getAttribute('data-price'));
+            var checkInDate = document.getElementById("CheckIn").value;
+            var newDuration = parseInt(document.getElementById('Duration').value);
+
+            var subTotal = newPrice * newDuration;
+
+            var date = new Date(checkInDate);
+            date.setDate(date.getDate() + newDuration);
+            var dd = String(date.getDate()).padStart(2, '0');
+            var mm = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+            var yyyy = date.getFullYear();
+            var checkOutDate = dd + '/' + mm + '/' + yyyy;
+
+            var productExists = false;
+            products = [
+                ...products,
+                {
+                    id: newId,
+                    name: newName,
+                    price: newPrice,
+                    checkIn: checkInDate,
+                    duration: newDuration,
+                    checkOut: checkOutDate,
+                    subTotal: subTotal
+                }
+            ];
+
+            DisplayTable();
+        }
+
+        function DisplayTable() {
+            const tbody = document.getElementById('Product-Table').getElementsByTagName('tbody')[0];
+            tbody.innerHTML = '';
+
+            for (var i = 0; i < products.length; i++) {
+                var tr = document.createElement('tr');
+
+                var td1 = document.createElement('td');
+                td1.textContent = products[i].id;
+                tr.appendChild(td1);
+
+                var td2 = document.createElement('td');
+                td2.textContent = products[i].name;
+                tr.appendChild(td2);
+
+                var td3 = document.createElement('td');
+                td3.textContent = products[i].price;
+                tr.appendChild(td3);
+
+
+
+                var td4 = document.createElement('td');
+                var checkInInput = document.createElement('input');
+                checkInInput.type = 'date';
+                checkInInput.value = products[i].checkIn;
+                checkInInput.min = "<?php echo date('Y-m-d', strtotime('now')); ?>";
+                td4.appendChild(checkInInput);
+                tr.appendChild(td4);
+
+                var td5 = document.createElement('td');
+                var durationInput = document.createElement('input');
+                durationInput.type = 'number';
+                durationInput.value = products[i].duration;
+                durationInput.min = "1";
+                td5.appendChild(durationInput);
+                tr.appendChild(td5);
+
+                var td6 = document.createElement('td');
+                td6.textContent = products[i].checkOut;
+                tr.appendChild(td6);
+
+                var td7 = document.createElement('td');
+                td7.textContent = products[i].subTotal;
+                tr.appendChild(td7);
+
+                var td8 = document.createElement('td');
+                var deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Delete';
+                deleteButton.className = 'btn btn-danger';
+                deleteButton.onclick = (function(index) {
+                    return function() {
+                        products.splice(index, 1);
+                        DisplayTable();
+                    };
+                })(i);
+                td8.appendChild(deleteButton);
+                tr.appendChild(td8);
+
+                tbody.appendChild(tr);
+            }
+            document.getElementById('Duration').value = '1';
+        }
+
+
+        function UpdateSub() {
+            var product_Select = document.getElementById('Product_Id');
+            var selectedOption = product_Select.options[product_Select.selectedIndex];
+            var newPrice = parseFloat(selectedOption.getAttribute('data-price'));
+            var newDuration = parseInt(document.getElementById('Duration').value);
+
+            document.getElementById('SubTotal').value = newPrice * newDuration;
+        }
+
+        window.onload = function() {
+            UpdateSub();
+            UpdateCheckOut();
+        };
+
+        function PrepareProductData() {
+            document.getElementById('product_data').value = JSON.stringify(products);
+        }
+    </script>
+@endsection

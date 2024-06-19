@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\FrontEndController;
 use App\Http\Controllers\HotelController; // jangan lupa di use
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\TypeController;
@@ -49,8 +51,28 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('transaction', TransactionController::class);
 
     Route::resource('customer', CustomerController::class);
-});
 
+    Route::resource('cart', CartController::class);
+
+    Route::get('/laralux', [FrontEndController::class, 'index'])->name('laralux.index');
+
+    Route::get('laralux/user/cart', function () {
+        return view('frontend.cart');
+    })->name('cart');
+
+    Route::get('/laralux/{laralux}', [
+        FrontEndController::class,
+        'show'
+    ])->name('laralux.show');
+    Route::get('laralux/cart/add/{id}', [FrontEndController::class, 'addToCart'])->name('addCart');
+    Route::get('laralux/cart/delete/{id}', [FrontEndController::class, 'deleteFromCart'])->name('delFromCart');
+    Route::post('laralux/cart/changeQuantity', [FrontEndController::class, 'changeQuantity'])->name('changeQuantity');
+    // Route::post('laralux/cart/addQty', [FrontEndController::class, 'addQuantity'])->name('addQty');
+    // Route::post('laralux/cart/reduceQty', [FrontEndController::class, 'reduceQuantity'])->name('redQty');
+    Route::post('laralux/cart/editCheckIn', [FrontEndController::class, 'editCheckIn'])->name('editCheckIn');
+    Route::get('laralux/cart/checkout', [FrontEndController::class, 'checkout'])->name('laralux.checkout');
+    Route::post('transaction/checkout', [TransactionController::class, 'checkout'])->name('checkout');
+});
 
 Route::resource('type', TypeController::class)->middleware('auth');
 
@@ -66,25 +88,34 @@ Route::post("/hotel/showInfo", [HotelController::class, 'showInfo'])->name("hote
 
 Route::post('/hotel/showProducts', [HotelController::class, 'showProducts'])->name('hotel.showProducts');
 
-Route::post('customtype/getEditForm', [TypeController::class, 'getEditForm'])->name('type.getEditForm');
+Route::post('type/getEditForm', [TypeController::class, 'getEditForm'])->name('type.getEditForm');
 
-Route::post('customtype/getEditFormB', [TypeController::class, 'getEditFormB'])->name('type.getEditFormB');
+Route::post('type/getEditFormB', [TypeController::class, 'getEditFormB'])->name('type.getEditFormB');
 
-Route::post('customtype/saveDataTD', [TypeController::class, 'saveDataTD'])->name('type.saveDataTD');
+Route::post('type/saveDataTD', [TypeController::class, 'saveDataTD'])->name('type.saveDataTD');
 
-Route::post('customtype/deleteData', [TypeController::class, 'deleteData'])->name('type.deleteData');
+Route::post('type/deleteData', [TypeController::class, 'deleteData'])->name('type.deleteData');
 
-Route::post('customcustomer/getEditForm', [CustomerController::class, 'getEditForm'])->name('customer.getEditForm');
+Route::post('customer/getEditForm', [CustomerController::class, 'getEditForm'])->name('customer.getEditForm');
 
-Route::post('customcustomer/deleteData', [CustomerController::class, 'deleteData'])->name('customer.deleteData');
+Route::post('customer/deleteData', [CustomerController::class, 'deleteData'])->name('customer.deleteData');
 
-Route::post('customproduct/getEditForm', [ProductController::class, 'getEditForm'])->name('product.getEditForm');
+Route::post('product/getEditForm', [ProductController::class, 'getEditForm'])->name('product.getEditForm');
 
-Route::post('customproduct/deleteData', [ProductController::class, 'deleteData'])->name('product.deleteData');
+Route::post('product/deleteData', [ProductController::class, 'deleteData'])->name('product.deleteData');
 
-Route::post('customtransaction/getEditForm', [TransactionController::class, 'getEditForm'])->name('transaction.getEditForm');
+Route::post('transaction/getEditForm', [TransactionController::class, 'getEditForm'])->name('transaction.getEditForm');
 
-Route::post('customtransaction/deleteData', [TransactionController::class, 'deleteData'])->name('transaction.deleteData');
+Route::post('transaction/deleteData', [TransactionController::class, 'deleteData'])->name('transaction.deleteData');
+
+Route::post('cart/getAddForm', [CartController::class, 'getAddForm'])->name('cart.getAddForm');
+
+Route::post('cart/getEditForm', [CartController::class, 'getEditForm'])->name('cart.getEditForm');
+
+Route::post('cart/saveDataTD', [CartController::class, 'saveDataTD'])->name('cart.saveDataTD');
+
+Route::post('cart/deleteData', [CartController::class, 'deleteData'])->name('cart.deleteData');
+
 
 Auth::routes();
 
@@ -103,3 +134,7 @@ Route::get('product/uploadPhoto/{product_id}', [ProductController::class, 'uploa
 Route::post('product/simpanPhoto', [ProductController::class, 'simpanPhoto'])->name('product.simpanPhoto');
 
 Route::post('product/delPhoto', [ProductController::class, 'delPhoto']);
+
+Route::get('/laralux', [FrontEndController::class, 'index'])->name('laralux.index');
+
+Route::get('/laralux/{laralux}', [FrontEndController::class, 'show'])->name('laralux.show');
