@@ -2,24 +2,13 @@
 
 @section('content')
     <div class="container">
-        <h1><b>TRANSACTION</b></h1>
+        <h1><b>DATA TRANSACTION</b></h1>
+        <p>this all data from transaction table</p>
 
-        <div style="display: flex; align-items: center; padding: 10px;">
-            <div>
-                <label for="employeeName">Employee Name:</label>
-                <input type="text" id="employeeName" value="{{ Auth::user()->name }}" readonly
-                    style="background-color: #c3c9cd; border: 1px solid #ccc;">
-            </div>
-            <div>
-                <label for="createdAt">Date:</label>
-                <input type="text" id="createdAt" value="{{ Auth::user()->created_at }}" readonly
-                    style="background-color: #c3c9cd; border: 1px solid #ccc;">
-            </div>
-        </div>
-
-
+        <p>{{ Auth::user()->name }}</p>
+        <p></p>
         <a class="btn btn-success" href="{{ route('transaction.create') }}">+ new transaction</a>
-        {{-- <a href="#modalCreate" data-toggle="modal" class="btn btn-info">+ New Type (with Modals)</a> --}}
+        <a href="#modalCreate" data-toggle="modal" class="btn btn-info">+ New Type (with Modals)</a>
         @if (@session('status'))
             <div class="alert alert-success">{{ session('status') }}</div>
         @endif
@@ -27,12 +16,9 @@
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Tanggal Transaction</th>
+                    <th>Kasir</th>
                     <th>Customer</th>
-                    <th>Hotel</th>
-                    <th>Produk</th>
-                    <th>Jumlah Kamar</th>
-                    <th>Total Harga</th>
+                    <th>Tanggal Transaction</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -40,38 +26,19 @@
                 @foreach ($transaction as $d)
                     <tr id="tr_{{ $d->id }}">
                         <td>{{ $d->id }}</td>
-                        <td>{{ $d->created_at }}</td>
+                        <td>{{ $d->user->name }}</td>
                         <td>{{ $d->customer->name }}</td>
+                        <td>{{ $d->created_at }}</td>
                         <td>
-                            @foreach ($d->products as $product)
-                                {{ $product->hotel->name }}
-                            @endforeach
-                        </td>
-                        <td>
-                            @foreach ($d->products as $product)
-                                {{ $product->name }}
-                            @endforeach
-                        </td>
-                        <td>
-                            @foreach ($d->products as $product)
-                                {{ $product->pivot->quantity }}
-                            @endforeach
-                        </td>
-                        <td>
-                            @foreach ($d->products as $product)
-                                {{ $product->pivot->subtotal }}
-                            @endforeach
-                        </td>
-                        <td>
-                            {{-- <a class="btn btn-success" data-toggle="modal" href="#myModal"
-                                onclick="getDetailData({{ $d->id }})"> Rincian Pembelian</a> --}}
-                            {{-- <a class="btn btn-warning" href="{{ route('transaction.edit', $d->id) }}">Edit</a> --}}
+                            <a class="btn btn-success" data-toggle="modal" href="#myModal"
+                                onclick="getDetailData({{ $d->id }})"> Rincian Pembelian</a>
+                            <a class="btn btn-warning" href="{{ route('transaction.edit', $d->id) }}">Edit</a>
                             <a href="#modalEditA" class="btn btn-warning
                             " data-toggle="modal"
-                                onclick="getEditForm({{ $d->id }})">Edit</a>
-                            {{-- <a href="#" value="DeleteNoReload" class="btn btn-danger"
+                                onclick="getEditForm({{ $d->id }})">Edit Type A</a>
+                            <a href="#" value="DeleteNoReload" class="btn btn-danger"
                                 onclick="if(confirm('Are you sure to delete {{ $d->id }} - {{ $d->name }} ? ')) deleteDataRemoveTR({{ $d->id }})">Delete
-                                without Reload</a> --}}
+                                without Reload</a>
                             <form method="POST" action="{{ route('transaction.destroy', $d->id) }}"
                                 style="display:inline;">
                                 @csrf

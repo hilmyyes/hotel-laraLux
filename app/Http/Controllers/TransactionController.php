@@ -15,7 +15,9 @@ class TransactionController extends Controller
      */
     public function index()
     {
-        $transaction = Transaction::all();
+        $transaction = Transaction::where('user_id', auth()->user()->id)->get();
+        //$transaction = Transaction::all();
+        //$produk_b = $transaction->products;
         $products = Product::all();
         $users = User::orderBy('name')->get();
         $customers = Customer::orderBy('name')->get();
