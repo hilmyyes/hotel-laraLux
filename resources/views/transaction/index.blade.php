@@ -6,13 +6,13 @@
 
         <div style="display: flex; align-items: center; padding: 10px;">
             <div>
-                <label for="employeeName">Employee Name:</label>
+                <label>Employee Name:</label>
                 <input type="text" id="employeeName" value="{{ Auth::user()->name }}" readonly
                     style="background-color: #c3c9cd; border: 1px solid #ccc;">
             </div>
             <div>
-                <label for="createdAt">Date:</label>
-                <input type="text" id="createdAt" value="{{ Auth::user()->created_at }}" readonly
+                <labe>Date:</labe>
+                <input type="text" id="date" value="{{ Auth::user()->created_at }}" readonly
                     style="background-color: #c3c9cd; border: 1px solid #ccc;">
             </div>
         </div>
@@ -31,7 +31,8 @@
                     <th>Customer</th>
                     <th>Hotel</th>
                     <th>Produk</th>
-                    <th>Jumlah Kamar</th>
+                    <th>Tanggal check_in</th>
+                    <th>Durasi</th>
                     <th>Total Harga</th>
                     <th>Action</th>
                 </tr>
@@ -43,25 +44,56 @@
                         <td>{{ $d->created_at }}</td>
                         <td>{{ $d->customer->name }}</td>
                         <td>
-                            @foreach ($d->products as $product)
-                                {{ $product->hotel->name }}
-                            @endforeach
+                            <ul>
+                                @foreach ($d->products as $product)
+                                    <li>
+                                        {{ $product->hotel->name }}
+                                    </li>
+                                @endforeach
+                            </ul>
+
                         </td>
                         <td>
-                            @foreach ($d->products as $product)
-                                {{ $product->name }}
-                            @endforeach
+                            <ul>
+                                @foreach ($d->products as $product)
+                                    <li>
+                                        {{ $product->name }}
+                                    </li>
+                                @endforeach
+                            </ul>
                         </td>
                         <td>
-                            @foreach ($d->products as $product)
-                                {{ $product->pivot->quantity }}
-                            @endforeach
+                            <ul>
+                                @foreach ($d->products as $product)
+                                    <li>
+                                        {{ $product->pivot->checkin_date }}
+                                    </li>
+                                @endforeach
+                            </ul>
                         </td>
                         <td>
-                            @foreach ($d->products as $product)
-                                {{ $product->pivot->subtotal }}
-                            @endforeach
+                            <ul>
+                                @foreach ($d->products as $product)
+                                    <li>
+                                        {{ $product->pivot->duration }}
+                                    </li>
+                                @endforeach
+                            </ul>
+
                         </td>
+                        <td>
+                            <ul>
+                                @foreach ($d->products as $product)
+                                    <li>
+                                        IDR. {{ number_format($product->pivot->subtotal, 0, ',', '.') }}
+                                    </li>
+                                @endforeach
+                            </ul>
+                            <hr>
+                            <strong>IDR. {{ number_format($d->total_price, 0, ',', '.') }}</strong>
+
+                        </td>
+
                         <td>
                             {{-- <a class="btn btn-success" data-toggle="modal" href="#myModal"
                                 onclick="getDetailData({{ $d->id }})"> Rincian Pembelian</a> --}}
@@ -215,5 +247,28 @@
                 }
             });
         }
+
+        // Fungsi untuk mendapatkan waktu saat ini dalam format yang diinginkan
+        function updateTime() {
+            var currentDate = new Date();
+            var formattedDate = currentDate.getFullYear() + '-' +
+                String(currentDate.getMonth() + 1).padStart(2, '0') + '-' +
+                String(currentDate.getDate()).padStart(2, '0');
+            var formattedTime = String(currentDate.getHours()).padStart(2, '0') + ':' +
+                String(currentDate.getMinutes()).padStart(2, '0') + ':' +
+                String(currentDate.getSeconds()).padStart(2, '0');
+            return formattedDate + ' ' + formattedTime;
+        }
+
+        // Mendapatkan elemen input date
+        var dateInput = document.getElementById('date');
+
+        // Mengatur nilai input pertama kali
+        dateInput.value = updateTime();
+
+        // Memperbarui nilai input setiap detik
+        setInterval(function() {
+            dateInput.value = updateTime();
+        }, 1000);
     </script>
 @endsection

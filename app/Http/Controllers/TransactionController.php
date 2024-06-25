@@ -18,6 +18,11 @@ class TransactionController extends Controller
         $transaction = Transaction::where('user_id', auth()->user()->id)->get();
         //$transaction = Transaction::all();
         //$produk_b = $transaction->products;
+
+        foreach ($transaction as $t) {
+            $t->total_price = $t->products->sum('pivot.subtotal');
+        }
+
         $products = Product::all();
         $users = User::orderBy('name')->get();
         $customers = Customer::orderBy('name')->get();
@@ -98,26 +103,33 @@ class TransactionController extends Controller
      */
     public function update(Request $request, Transaction $transaction)
     {
-        // Perbarui data transaksi
+        // Update transaction data
         $transaction->user_id = $request->user;
         $transaction->customer_id = $request->customer;
         $transaction->save();
 
-        $product = $request->product;
-        $quantity = $request->quantity;
-        $subtotal = $request->subtotal;
+        // Clear current products from the transaction
+        $transaction->products()->detach();
 
-        // Perbarui data pivot
-        $transaction->products()->syncWithoutDetaching([
-            $product => [
-                'quantity' => $quantity,
-                'subtotal' => $subtotal,
-            ]
-        ]);
+        // Iterate through each product to update pivot data
+        foreach ($request->products as $productData) {
+            $product = $productData['product'];
+            $checkin_date = $productData['checkin_date'];
+            $duration = $productData['duration'];
+            $subtotal = $productData['subtotal'];
 
-        // Redirect ke halaman index dengan pesan sukses
+            // Update pivot data
+            $transaction->products()->attach($product, [
+                'checkin_date' => $checkin_date,
+                'duration' => $duration,
+                'subtotal' => $subtotal
+            ]);
+        }
+
+        // Redirect to index page with success message
         return redirect()->route('transaction.index')->with('status', 'Transaction updated successfully!');
     }
+
 
 
     /**
@@ -143,23 +155,23 @@ class TransactionController extends Controller
         $data = Transaction::find($id);
         $products = $data->products;
         return response()->json(array(
-            'msg' => view('transaction.showModal', compact('data', 'products'))->render()
+            'msg' => view('transaction.showM  odal', compact('data', 'products'))->render()
         ), 200);
     }
 
     public function getEditForm(Request $request)
     {
         $id = $request->id;
-        $data = Transaction::find($id);
+        $data = Transaction::with('products')->find($id); // Load all related products
         $products = Product::all();
         $users = User::orderBy('name')->get();
         $customers = Customer::orderBy('name')->get();
-        $transactionProduct = $data->products()->first();
         return response()->json(array(
             'status' => 'oke',
-            'msg' => view('transaction.getEditForm', compact('data', 'products', 'users', 'customers', 'transactionProduct'))->render()
+            'msg' => view('transaction.getEditForm', compact('data', 'products', 'users', 'customers'))->render()
         ));
     }
+
 
     public function deleteData(Request $request)
     {

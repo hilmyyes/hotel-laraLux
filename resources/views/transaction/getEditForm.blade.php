@@ -6,12 +6,7 @@
     <div class="form-group">
         <label for="user">User</label>
         <select class="form-control" name="user" required>
-            @if ($data)
-                <option value="{{ $data->user_id }}" selected>{{ $data->user->name }}</option>
-            @else
-                <option selected disabled>Select a user</option>
-            @endif
-
+            <option value="{{ $data->user_id }}" selected>{{ $data->user->name }}</option>
             @foreach ($users as $u)
                 <option value="{{ $u->id }}">{{ $u->name }}</option>
             @endforeach
@@ -21,47 +16,47 @@
     <div class="form-group">
         <label for="customer">Customer</label>
         <select class="form-control" name="customer" required>
-            @if ($data)
-                <option value="{{ $data->customer_id }}" selected>{{ $data->customer->name }}</option>
-            @else
-                <option selected disabled>Select a customer</option>
-            @endif
-
+            <option value="{{ $data->customer_id }}" selected>{{ $data->customer->name }}</option>
             @foreach ($customers as $c)
                 <option value="{{ $c->id }}">{{ $c->name }}</option>
             @endforeach
         </select>
     </div>
 
-    <h3>Product</h3>
-    <div class="form-group">
-        <label for="product">Product</label>
-        <select class="form-control" name="product" required>
-            @if ($transactionProduct)
+    <h3>Products</h3>
+    @foreach ($data->products as $transactionProduct)
+        <div class="form-group">
+            <label for="product_{{ $transactionProduct->id }}">Product</label>
+            <select class="form-control" name="products[{{ $transactionProduct->id }}][product]"
+                id="product_{{ $transactionProduct->id }}" required>
                 <option value="{{ $transactionProduct->id }}" selected>{{ $transactionProduct->name }}</option>
-            @else
-                <option selected disabled>Select a product</option>
-            @endif
+                @foreach ($products as $p)
+                    <option value="{{ $p->id }}">{{ $p->name }}</option>
+                @endforeach
+            </select>
+        </div>
 
-            @foreach ($products as $p)
-                <option value="{{ $p->id }}">{{ $p->name }}</option>
-            @endforeach
-        </select>
-    </div>
+        <div class="form-group">
+            <label for="checkin_date_{{ $transactionProduct->id }}">Check-in Date</label>
+            <input type="date" name="products[{{ $transactionProduct->id }}][checkin_date]" class="form-control"
+                id="checkin_date_{{ $transactionProduct->id }}"
+                value="{{ $transactionProduct->pivot->checkin_date }}">
+        </div>
 
-    <div class="form-group">
-        <label for="quantity">Quantity of Product</label>
-        <input type="text" name="quantity" class="form-control" id="quantity" aria-describedby="quantityHelp"
-            placeholder="Enter Quantity of Product" value="{{ $transactionProduct->pivot->quantity }}">
-        <small id="quantityHelp" class="form-text text-muted">Please write down your data here</small>
-    </div>
+        <div class="form-group">
+            <label for="duration_{{ $transactionProduct->id }}">Duration</label>
+            <input type="number" name="products[{{ $transactionProduct->id }}][duration]" class="form-control"
+                id="duration_{{ $transactionProduct->id }}" value="{{ $transactionProduct->pivot->duration }}">
+        </div>
 
-    <div class="form-group">
-        <label for="subtotal">Subtotal of Product</label>
-        <input type="text" name="subtotal" class="form-control" id="subtotal" aria-describedby="subtotalHelp"
-            placeholder="Enter Subtotal of Product" value="{{ $transactionProduct->pivot->subtotal }}">
-        <small id="subtotalHelp" class="form-text text-muted">Please write down your data here</small>
-    </div>
+        <div class="form-group">
+            <label for="subtotal_{{ $transactionProduct->id }}">Subtotal</label>
+            <input type="number" step="0.01" name="products[{{ $transactionProduct->id }}][subtotal]"
+                class="form-control" id="subtotal_{{ $transactionProduct->id }}"
+                value="{{ $transactionProduct->pivot->subtotal }}">
+        </div>
+    @endforeach
+
 
     <a class="btn btn-info" href="{{ route('transaction.index') }}">Cancel</a>
     <button type="submit" class="btn btn-primary">Submit</button>
