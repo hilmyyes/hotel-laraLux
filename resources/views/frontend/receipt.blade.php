@@ -5,15 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Receipt</title>
-    <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        /* @media print {
-            .btn-print {
-                display: none;
-            }
-        }
-         */
         .nowrap {
             white-space: nowrap;
         }
@@ -131,7 +124,6 @@
                             <td colspan="3"></td>
                             <td colspan="2" class="text-left"><strong>Total Tax</strong></td>
                             <td><strong>{{ 'Rp ' . number_format($total * 3 / 100, 2) }}</strong></td>
-                            <!-- Sample tax -->
                         </tr>
                         <tr>
                             <td colspan="3"></td>
@@ -139,7 +131,6 @@
                             <td>
                                 <strong>{{ 'Rp ' . number_format($total + $total * 11 / 100 + $total * 3 / 100, 2) }}</strong>
                             </td>
-                            <!-- Adjust according to the real data -->
                         </tr>
                         <tr>
                             <td colspan="3"></td>
