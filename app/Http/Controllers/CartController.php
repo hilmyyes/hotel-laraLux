@@ -165,4 +165,5 @@ class CartController extends Controller
                 'msg' => 'type data is removed !'
             ), 200);
     }
+    
 }

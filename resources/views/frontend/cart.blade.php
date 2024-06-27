@@ -37,7 +37,7 @@
                                             </div>
                                         </td>
                                         <td>{{ 'IDR ' . $item['price'] }}</td>
-                                        <td>
+                                        {{-- <td>
                                             <input type="date" class="form-control" name="checkin_date"
                                                 id="checkin_date_{{ $item['id'] }}"
                                                 value="{{ date('Y-m-d', strtotime($item['checkin_date'])) }}"
@@ -50,9 +50,18 @@
                                                     id="duration_{{ $item['id'] }}" min="1"
                                                     onchange="changeQty({{ $item['id'] }})"> days
                                             </div>
+                                        </td> --}}
+
+
+                                        <td>
+                                            <input type="text" name="daterange" minDate="{{ date('Y-m-d') }}" />
                                         </td>
-                                        <td>{{ date('d/m/Y', strtotime($item['checkin_date'] . ' + ' . $item['duration'] . ' days')) }}
-                                        </td>
+
+
+                                        {{-- <td>
+                                            {{ date('d/m/Y', strtotime($item['checkin_date'] . ' + ' . $item['duration'] . ' days')) }}
+                                        </td> --}}
+
                                         <td>{{ 'IDR ' . $item['duration'] * $item['price'] }}</td>
                                         <td><a class="btn btn-danger" href="{{ route('delFromCart', $item['id']) }}"><i
                                                     class="fa fa-trash"></i></a></td>
@@ -91,6 +100,7 @@
                             <div class="cart-btn">
                                 <a class="btn btn-xs" href="{{ route('laralux.index') }}">Continue Shopping</a>
                                 <a class="btn btn-xs" href="{{ route('laralux.checkout') }}">Checkout</a>
+                                <a class="btn btn-xs" href="{{ route('laralux.checkout') }}">Generate Receipt</a>
                             </div>
                         </div>
                     </div>
@@ -102,6 +112,28 @@
 
 @section('js')
     <script>
+        $(function() {
+            $('input[name="daterange"]').daterangepicker({
+                opens: 'left',
+                startDate: moment(),
+                minDate: moment(),
+                locale: {
+                    format: 'DD-MM-YYYY'
+                }
+            }, function(start, end, label) {
+                var startDate = start.format('DD-MM-YYYY');
+                var endDate = end.format('DD-MM-YYYY');
+
+                $('#checkin_date').val(startDate);
+
+                var duration = end.diff(start, 'days') + 1;
+                $('#duration').val(duration);
+
+                console.log("A new date selection was made: " + startDate + ' to ' + endDate);
+
+            });
+        });
+
         function changeQty(id) {
             var newQuan = document.getElementById("duration_" + id).value;
 

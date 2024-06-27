@@ -3,6 +3,7 @@
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\FrontEndController;
 use App\Http\Controllers\HotelController; // jangan lupa di use
+use App\Http\Controllers\ordercontroller;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\TypeController;
 use App\Http\Controllers\Customer;
@@ -23,9 +24,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('home');
-})->name('home');
+// Route::get('/', function () {
+//     return view('home');
+// })->name('home');
 
 Route::get('/kategori', function () {
     return view('kategori');
@@ -60,6 +61,7 @@ Route::middleware(['auth'])->group(function () {
         return view('frontend.cart');
     })->name('cart');
 
+
     Route::get('/laralux/{laralux}', [
         FrontEndController::class,
         'show'
@@ -72,6 +74,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('laralux/cart/editCheckIn', [FrontEndController::class, 'editCheckIn'])->name('editCheckIn');
     Route::get('laralux/cart/checkout', [FrontEndController::class, 'checkout'])->name('laralux.checkout');
     Route::post('transaction/checkout', [TransactionController::class, 'checkout'])->name('checkout');
+
+
 });
 
 Route::resource('type', TypeController::class)->middleware('auth');
@@ -138,3 +142,5 @@ Route::post('product/delPhoto', [ProductController::class, 'delPhoto']);
 Route::get('/laralux', [FrontEndController::class, 'index'])->name('laralux.index');
 
 Route::get('/laralux/{laralux}', [FrontEndController::class, 'show'])->name('laralux.show');
+
+Route::get('/laralux/user/Receipt', [FrontEndController::class, 'receipt'])->name('laralux.receipt');

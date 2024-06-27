@@ -38,6 +38,7 @@ class FrontEndController extends Controller
             $cart[$id] = [
                 'id' => $id,
                 'name' => $product->name,
+                'description' => $product->description,
                 'duration' => 1,
                 'price' => $product->price,
                 'photo' => $product->image,
@@ -48,6 +49,7 @@ class FrontEndController extends Controller
         $cart[$id] = [
             'id' => $id,
             'name' => $product->name,
+            'description' => $product->description,
             'checkin_date' => now(),
             'duration' => 1,
             'price' => $product->price,
@@ -116,7 +118,7 @@ class FrontEndController extends Controller
         return redirect()->back()->with("status", "Produk Telah dibuang dari Cart");
     }
 
-    public function checkout()
+    public function checkout(Request $request)
     {
         $cart = session('cart');
         $user = Auth::user();
@@ -128,6 +130,7 @@ class FrontEndController extends Controller
         $t->save();
 
         $transactionId = $t->id;
+        session(['transactionId' => $transactionId]);
 
         foreach ($cart as $c) {
             $newProdTrans = new ProductTransaction();
@@ -140,8 +143,36 @@ class FrontEndController extends Controller
             $newProdTrans->subtotal = $subtotal;
             $newProdTrans->save();
         }
+        
+        $total = array_reduce($cart, function ($carry, $item) {
+            return $carry + $item['duration'] * $item['price'];
+        }, 0);
 
+        $transaction = Transaction::findOrFail($transactionId);
+        $customer = $user;
+        $status = 'Your order on Laralux Reservation System is complete.';
+        
         session()->forget('cart');
-        return redirect()->route('laralux.index')->with('status', 'Checkout berhasil');
+        
+        return view('frontend.receipt', compact('cart', 'total', 'transaction', 'customer','status'));
     }
+    // public function receipt(Request $request)
+    // {
+    //     $transactionId = session('transactionId');
+    //     $cart = $request->session()->get('cart');
+    //     $total = array_reduce($cart, function ($carry, $item) {
+    //         return $carry + $item['duration'] * $item['price'];
+    //     }, 0);
+    //     $transaction = Transaction::findOrFail($transactionId);
+    //     $customer = Auth::user();
+    //     $status = 'Your order on Laralux Reservation System is complete.';
+    //     session()->forget('cart');
+    //     return view('frontend.receipt', compact('cart', 'total', 'transaction', 'customer','status'));
+    // }
+    
+
+
+
+
+
 }
