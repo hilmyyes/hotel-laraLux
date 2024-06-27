@@ -156,23 +156,4 @@ class FrontEndController extends Controller
         
         return view('frontend.receipt', compact('cart', 'total', 'transaction', 'customer','status'));
     }
-    // public function receipt(Request $request)
-    // {
-    //     $transactionId = session('transactionId');
-    //     $cart = $request->session()->get('cart');
-    //     $total = array_reduce($cart, function ($carry, $item) {
-    //         return $carry + $item['duration'] * $item['price'];
-    //     }, 0);
-    //     $transaction = Transaction::findOrFail($transactionId);
-    //     $customer = Auth::user();
-    //     $status = 'Your order on Laralux Reservation System is complete.';
-    //     session()->forget('cart');
-    //     return view('frontend.receipt', compact('cart', 'total', 'transaction', 'customer','status'));
-    // }
-    
-
-
-
-
-
 }

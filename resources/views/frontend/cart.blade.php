@@ -100,7 +100,6 @@
                             <div class="cart-btn">
                                 <a class="btn btn-xs" href="{{ route('laralux.index') }}">Continue Shopping</a>
                                 <a class="btn btn-xs" href="{{ route('laralux.checkout') }}">Checkout</a>
-                                <a class="btn btn-xs" href="{{ route('laralux.checkout') }}">Generate Receipt</a>
                             </div>
                         </div>
                     </div>
