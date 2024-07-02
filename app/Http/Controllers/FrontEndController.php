@@ -39,6 +39,7 @@ class FrontEndController extends Controller
                 'id' => $id,
                 'name' => $product->name,
                 'description' => $product->description,
+                'checkin_date' => now()->format('d-m-Y'),
                 'duration' => 1,
                 'price' => $product->price,
                 'photo' => $product->image,
@@ -46,15 +47,6 @@ class FrontEndController extends Controller
         } else {
             $cart[$id]['duration']++;
         }
-        $cart[$id] = [
-            'id' => $id,
-            'name' => $product->name,
-            'description' => $product->description,
-            'checkin_date' => now(),
-            'duration' => 1,
-            'price' => $product->price,
-            'photo' => $product->image,
-        ];
 
         session()->put('cart', $cart);
         return redirect()->back()->with("status", "Produk Telah ditambahkan ke Cart");
@@ -96,10 +88,12 @@ class FrontEndController extends Controller
     {
         $id = $request->id;
         $checkin_date = $request->checkin_date;
+        $duration = $request->duration;
         $cart = session()->get('cart');
 
         if (isset($cart[$id])) {
             $cart[$id]['checkin_date'] = $checkin_date;
+            $cart[$id]['duration'] = $duration;
         }
 
         session()->put('cart', $cart);
@@ -136,14 +130,15 @@ class FrontEndController extends Controller
             $newProdTrans = new ProductTransaction();
             $newProdTrans->product_id = $c['id'];
             $newProdTrans->transaction_id = $transactionId;
-            $newProdTrans->checkin_date = $c['checkin_date'];
+            $checkinDate = date('Y-m-d', strtotime(str_replace('-', '/', $c['checkin_date'])));
+            $newProdTrans->checkin_date = $checkinDate;
             $newProdTrans->duration = $c['duration'];
 
             $subtotal = $c['duration'] * $c['price'];
             $newProdTrans->subtotal = $subtotal;
             $newProdTrans->save();
         }
-        
+
         $total = array_reduce($cart, function ($carry, $item) {
             return $carry + $item['duration'] * $item['price'];
         }, 0);
@@ -151,9 +146,9 @@ class FrontEndController extends Controller
         $transaction = Transaction::findOrFail($transactionId);
         $customer = $user;
         $status = 'Your order on Laralux Reservation System is complete.';
-        
+
         session()->forget('cart');
-        
-        return view('frontend.receipt', compact('cart', 'total', 'transaction', 'customer','status'));
+
+        return view('frontend.receipt', compact('cart', 'total', 'transaction', 'customer', 'status'));
     }
 }

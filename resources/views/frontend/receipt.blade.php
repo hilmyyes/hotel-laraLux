@@ -2,14 +2,20 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
     <title>Receipt</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .nowrap {
             white-space: nowrap;
         }
+
         .img-fluid {
             max-width: 150px;
         }
@@ -22,8 +28,9 @@
         .customer-details .row div {
             margin-bottom: 10px;
         }
+
         .container {
-            max-width: 1200px; 
+            max-width: 1200px;
             margin: 0 auto;
         }
     </style>
@@ -32,7 +39,8 @@
 <body class="bg-light">
     <div class="container border p-4 mt-5">
         <div class="alert alert-success">
-            {{$status}} <a class="btn btn-outline-success" href="{{ route('laralux.index') }}">Continue Shopping</a>
+            {{ $status }} <a class="btn btn-outline-success" href="{{ route('laralux.index') }}">Continue
+                Shopping</a>
         </div>
         <div class="table-responsive mb-4">
             <div class="customer-details">
@@ -42,7 +50,7 @@
                         <p>Your check must include:</p>
                         <ul>
                             <li>Payment amount: IDR
-                                {{ number_format($total + $total * 11 / 100 + $total * 3 / 100, 2) }}
+                                {{ number_format($total + ($total * 11) / 100 + ($total * 3) / 100, 2) }}
                             </li>
                             <li>Payable to the order of {{ $customer->name }}</li>
                             <li>Mail to {{ $customer->email }}</li>
@@ -92,8 +100,8 @@
                                         <a href="#"><img src="{{ asset('images/blank.jpg') }}" alt="Image"
                                                 class="img-fluid"></a>
                                     @else
-                                        <a href="#"><img src="{{ asset('images/' . $item['photo']) }}" alt="Image"
-                                                class="img-fluid"></a>
+                                        <a href="#"><img src="{{ asset('images/' . $item['photo']) }}"
+                                                alt="Image" class="img-fluid"></a>
                                     @endif
                                 </div>
                             </td>
@@ -112,46 +120,47 @@
                     @if ($cart)
                         <tr>
                             <td colspan="3"></td>
-                            <td colspan="2" class="text-left"><strong>Total Rooms Cost (tax incl.)</strong></td>
+                            <td colspan="2" class="text-left"><strong>Total Rooms Cost (tax exc.)</strong></td>
                             <td><strong>{{ 'Rp ' . number_format($total, 2) }}</strong></td>
                         </tr>
                         <tr>
                             <td colspan="3"></td>
-                            <td colspan="2" class="text-left"><strong>Total Convenience Fees (tax incl.)</strong></td>
-                            <td><strong>{{ 'Rp ' . number_format($total * 11 / 100, 2) }}</strong></td>
-                        </tr>
-                        <tr>
-                            <td colspan="3"></td>
-                            <td colspan="2" class="text-left"><strong>Total Tax</strong></td>
-                            <td><strong>{{ 'Rp ' . number_format($total * 3 / 100, 2) }}</strong></td>
+                            <td colspan="2" class="text-left"><strong>Total Tax (11%)</strong>
+                            </td>
+                            <td><strong>{{ 'Rp ' . number_format(($total * 11) / 100, 2) }}</strong></td>
                         </tr>
                         <tr>
                             <td colspan="3"></td>
                             <td colspan="2" class="text-left"><strong>Final Booking Total</strong></td>
                             <td>
-                                <strong>{{ 'Rp ' . number_format($total + $total * 11 / 100 + $total * 3 / 100, 2) }}</strong>
+                                <strong>{{ 'Rp ' . number_format($total + ($total * 11) / 100 + ($total * 3) / 100, 2) }}</strong>
                             </td>
                         </tr>
                         <tr>
                             <td colspan="3"></td>
                             <td colspan="2" class="text-left"><strong>Due Amount</strong></td>
                             <td>
-                                <strong>{{ 'Rp ' . number_format($total + $total * 11 / 100 + $total * 3 / 100, 2) }}</strong>
+                                <strong>{{ 'Rp ' . number_format($total + ($total * 11) / 100 + ($total * 3) / 100, 2) }}</strong>
                             </td>
                         </tr>
                     @endif
                 </tbody>
             </table>
-            <p>An email has been sent with this information. <br>
-                <b>Your booking has been received successfully and we are looking forward to welcoming you.</b>
+            <p>Your booking has been received successfully and we are looking forward to welcoming you.
             </p>
         </div>
     </div>
 
     <!-- Bootstrap and other JavaScript libraries -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
+    </script>
 </body>
 
 </html>

@@ -12,10 +12,9 @@
                         <thead class="thead-dark">
                             <tr>
                                 <th>Product</th>
+                                <th>Name</th>
                                 <th>Price</th>
-                                <th>Check In Date</th>
-                                <th>Duration</th>
-                                <th>Check Out Date</th>
+                                <th>Check In / Check Out Date</th>
                                 <th>Total</th>
                                 <th>Remove</th>
                             </tr>
@@ -33,34 +32,19 @@
                                                     <a href="#"><img src="{{ asset('images/' . $item['photo']) }}"
                                                             alt="Image"></a>
                                                 @endif
-                                                <p>{{ $item['name'] }}</p>
                                             </div>
+                                        </td>
+                                        <td>
+                                            <p>{{ $item['name'] }}</p>
                                         </td>
                                         <td>{{ 'IDR ' . $item['price'] }}</td>
-                                        {{-- <td>
-                                            <input type="date" class="form-control" name="checkin_date"
-                                                id="checkin_date_{{ $item['id'] }}"
-                                                value="{{ date('Y-m-d', strtotime($item['checkin_date'])) }}"
-                                                min="{{ date('Y-m-d', strtotime('now')) }}"
-                                                onchange="editCheckIn({{ $item['id'] }})"><br>
-                                        </td>
-                                        <td>
-                                            <div class="qty">
-                                                <input type="number" value="{{ $item['duration'] }}"
-                                                    id="duration_{{ $item['id'] }}" min="1"
-                                                    onchange="changeQty({{ $item['id'] }})"> days
-                                            </div>
-                                        </td> --}}
-
 
                                         <td>
-                                            <input type="text" name="daterange" minDate="{{ date('Y-m-d') }}" />
+                                            <input type="text" name="daterange_{{ $item['id'] }}"
+                                                data-checkin_date="{{ $item['checkin_date'] }}"
+                                                data-duration="{{ $item['duration'] }}">
+
                                         </td>
-
-
-                                        {{-- <td>
-                                            {{ date('d/m/Y', strtotime($item['checkin_date'] . ' + ' . $item['duration'] . ' days')) }}
-                                        </td> --}}
 
                                         <td>{{ 'IDR ' . $item['duration'] * $item['price'] }}</td>
                                         <td><a class="btn btn-danger" href="{{ route('delFromCart', $item['id']) }}"><i
@@ -112,26 +96,46 @@
 @section('js')
     <script>
         $(function() {
-            $('input[name="daterange"]').daterangepicker({
-                opens: 'left',
-                startDate: moment(),
-                minDate: moment(),
-                locale: {
-                    format: 'DD-MM-YYYY'
-                }
-            }, function(start, end, label) {
-                var startDate = start.format('DD-MM-YYYY');
-                var endDate = end.format('DD-MM-YYYY');
+            $('input[name^="daterange_"]').each(function() {
+                var $this = $(this);
+                var startDate = $(this).data('checkin_date');
+                var duration = parseInt($(this).data('duration'));
 
-                $('#checkin_date').val(startDate);
+                $this.daterangepicker({
+                    opens: 'left',
+                    startDate: moment(startDate, 'DD-MM-YYYY'),
+                    minDate: moment(),
+                    endDate: moment(startDate, 'DD-MM-YYYY').add(duration, 'days'),
+                    locale: {
+                        format: 'DD-MM-YYYY'
+                    }
+                }, function(start, end) {
+                    var id = $(this.element).attr('name').split('_')[1];
 
-                var duration = end.diff(start, 'days') + 1;
-                $('#duration').val(duration);
+                    var startDate = start.format('DD-MM-YYYY');
+                    var duration = end.diff(start, 'days');
+                    var endDate = start.clone().add(duration, 'days').format('DD-MM-YYYY');
 
-                console.log("A new date selection was made: " + startDate + ' to ' + endDate);
+                    console.log("A new date selection was made for ID " + id + ": " + startDate +
+                        ' to ' + endDate + ', with duration of ' + duration + ' days.');
 
+                    $.ajax({
+                        type: 'POST',
+                        url: '{{ route('editCheckIn') }}',
+                        data: {
+                            '_token': '{{ csrf_token() }}',
+                            'id': id,
+                            'checkin_date': startDate,
+                            'duration': duration,
+                        },
+                        success: function(data) {
+                            location.reload();
+                        }
+                    });
+                });
             });
         });
+
 
         function changeQty(id) {
             var newQuan = document.getElementById("duration_" + id).value;
