@@ -55,7 +55,9 @@
         <a class="btn btn-info" href="{{ route('transaction.index') }}">Cancel</a>
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
+@endsection
 
+@section('javascript')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const addProductBtn = document.getElementById('add-product');

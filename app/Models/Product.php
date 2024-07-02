@@ -22,6 +22,11 @@ class Product extends Model
 
     public function transactions(): BelongsToMany
     {
-        return $this->belongsToMany(Transaction::class, 'Product_transaction', 'product_id', 'transaction_id')->withPivot('checkin_date', 'duration', 'subtotal'); // hotel_id untuk merujuk pada id hotel yang akan di tuju
+        return $this->belongsToMany(Transaction::class, 'Product_transaction', 'product_id', 'transaction_id')->withPivot('checkin_date', 'duration', 'subtotal', 'points_earned', 'points_redeemed'); // hotel_id untuk merujuk pada id hotel yang akan di tuju
+    }
+
+    public function facilities()
+    {
+        return $this->belongsToMany(Facilities::class, 'products_has_facilities');
     }
 }
