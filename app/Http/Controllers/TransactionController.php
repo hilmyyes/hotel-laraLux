@@ -45,7 +45,8 @@ class TransactionController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {        $request->validate([
+    {
+        $request->validate([
             'user' => 'required',
             'products.*' => 'required',
             'check_in.*' => 'required',
@@ -191,6 +192,39 @@ class TransactionController extends Controller
             $subtotal = $c['quantity'] * $c['price'];
             $total += $subtotal;
             $this->products()->attach($c['id'], ['quantity' => $c['quantity'], 'subtotal' => $subtotal]);
+        }
+    }
+
+    public function addToCart($id)
+    {
+        $product = Product::find($id);
+        $cart = session()->get('cart');
+        if (!isset($cart[$id])) {
+            $cart[$id] = [
+                'id' => $id,
+                'name' => $product->name,
+                'description' => $product->description,
+                'checkin_date' => now()->format('d-m-Y'),
+                'duration' => 1,
+                'price' => $product->price,
+                'photo' => $product->image,
+            ];
+        } else {
+            $cart[$id]['duration']++;
+        }
+
+        session()->put('cart', $cart);
+        return redirect()->back()->with("status", "Produk Telah ditambahkan ke Cart");
+    }
+
+    public function getPrice($id)
+    {
+        dd($id);
+        $products = Product::find($id);
+        if ($products) {
+            return response()->json(['price' => $products->price]);
+        } else {
+            return response()->json(['error' => 'Product not found'], 404);
         }
     }
 }

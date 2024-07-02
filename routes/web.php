@@ -24,9 +24,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::get('/', function () {
-//     return view('home');
-// })->name('home');
+Route::get('/', function () {
+    return view('home');
+})->name('home');
 
 Route::get('/kategori', function () {
     return view('kategori');
@@ -74,8 +74,6 @@ Route::middleware(['auth'])->group(function () {
     Route::post('laralux/cart/editCheckIn', [FrontEndController::class, 'editCheckIn'])->name('editCheckIn');
     Route::get('laralux/cart/checkout', [FrontEndController::class, 'checkout'])->name('laralux.checkout');
     Route::post('transaction/checkout', [TransactionController::class, 'checkout'])->name('checkout');
-
-
 });
 
 Route::resource('type', TypeController::class)->middleware('auth');
@@ -119,6 +117,7 @@ Route::post('cart/getEditForm', [CartController::class, 'getEditForm'])->name('c
 Route::post('cart/saveDataTD', [CartController::class, 'saveDataTD'])->name('cart.saveDataTD');
 
 Route::post('cart/deleteData', [CartController::class, 'deleteData'])->name('cart.deleteData');
+Route::get('/product-price/{id}', [ProductController::class, 'getPrice'])->name('product.price');
 
 
 Auth::routes();
