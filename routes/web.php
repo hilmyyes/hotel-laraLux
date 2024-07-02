@@ -144,3 +144,5 @@ Route::get('/laralux', [FrontEndController::class, 'index'])->name('laralux.inde
 Route::get('/laralux/{laralux}', [FrontEndController::class, 'show'])->name('laralux.show');
 
 Route::get('/laralux/user/Receipt', [FrontEndController::class, 'receipt'])->name('laralux.receipt');
+
+Route::get('/laralux/user/DeleteAllCart', [FrontEndController::class, 'deleteAllCart'])->name('laralux.deleteAllCart');

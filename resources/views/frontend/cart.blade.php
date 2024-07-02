@@ -1,6 +1,14 @@
 @extends('layout.frontend')
 
 @section('content')
+    <style>
+        .full-width-button {
+            width: 100%;
+            display: inline-block;
+            text-align: center;
+        }
+    </style>
+
     <div class="row">
         <div class="col-lg-8">
             <div class="cart-page-inner">
@@ -8,6 +16,7 @@
                     @php
                         $total = 0;
                     @endphp
+
                     <table class="table table-bordered">
                         <thead class="thead-dark">
                             <tr>
@@ -37,7 +46,7 @@
                                         <td>
                                             <p>{{ $item['name'] }}</p>
                                         </td>
-                                        <td>{{ 'IDR ' . $item['price'] }}</td>
+                                        <td>{{ 'Rp ' . $item['price'] }}</td>
 
                                         <td>
                                             <input type="text" name="daterange_{{ $item['id'] }}"
@@ -46,17 +55,24 @@
 
                                         </td>
 
-                                        <td>{{ 'IDR ' . $item['duration'] * $item['price'] }}</td>
-                                        <td><a class="btn btn-danger" href="{{ route('delFromCart', $item['id']) }}"><i
+                                        <td>{{ 'Rp ' . $item['duration'] * $item['price'] }}</td>
+                                        <td><a class="btn btn-xs full-width-button"
+                                                href="{{ route('delFromCart', $item['id']) }}"><i
                                                     class="fa fa-trash"></i></a></td>
                                     </tr>
                                     @php
                                         $total += $item['duration'] * $item['price'];
                                     @endphp
                                 @endforeach
+                                <tr>
+                                    <td colspan="6">
+                                        <a class="btn btn-xs full-width-button"
+                                            href="{{ route('laralux.deleteAllCart') }}">Delete All Cart</a>
+                                    </td>
+                                </tr>
                             @else
                                 <tr>
-                                    <td colspan="5">
+                                    <td colspan="6">
                                         <p>Tidak ada item di cart.</p>
                                     </td>
                                 </tr>
@@ -74,16 +90,39 @@
                             <input type="text" placeholder="Coupon Code">
                             <button>Apply Code</button>
                         </div>
+                    </div><br><br>
+                    <div class="col-md-12">
+                        <h1>Cart Summary</h1>
                     </div>
                     <div class="col-md-12">
                         <div class="cart-summary">
-                            <div class="cart-content">
-                                <h1>Cart Summary</h1>
-                                <h2>Grand Total<span>{{ 'IDR ' . $total }}</span></h2>
+                            <div class="customer-details">
+                                <table class="table">
+                                    <tr>
+                                        <th scope="row">Total Rooms Cost (exc. Tax)</th>
+                                        <td>
+                                            <p>{{ 'Rp ' . number_format($total, 2) }}</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Tax (11%)</th>
+                                        <td>
+                                            <p>{{ 'Rp ' . number_format(($total * 11) / 100, 2) }}</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Due Amount</th>
+                                        <td>
+                                            <p>
+                                                <b>{{ 'Rp ' . number_format($total + ($total * 11) / 100 + ($total * 3) / 100, 2) }}</b>
+                                            </p>
+                                        </td>
+                                    </tr>
+                                </table>
                             </div>
-                            <div class="cart-btn">
+                            <div class="cart-btn d-flex ">
                                 <a class="btn btn-xs" href="{{ route('laralux.index') }}">Continue Shopping</a>
-                                <a class="btn btn-xs" href="{{ route('laralux.checkout') }}">Checkout</a>
+                                <a class="btn btn-xs mr-5" href="{{ route('laralux.checkout') }}" style="margin-left: 155px">Checkout</a>
                             </div>
                         </div>
                     </div>
@@ -135,55 +174,5 @@
                 });
             });
         });
-
-
-        function changeQty(id) {
-            var newQuan = document.getElementById("duration_" + id).value;
-
-            $.ajax({
-                type: 'POST',
-                url: '{{ route('changeQuantity') }}',
-                data: {
-                    '_token': '{{ csrf_token() }}',
-                    'id': id,
-                    'newQuan': newQuan
-                },
-                success: function(data) {
-                    location.reload();
-                }
-            });
-        }
-
-        function editCheckIn(id) {
-            var checkin_date = document.getElementById("checkin_date_" + id).value;
-
-            $.ajax({
-                type: 'POST',
-                url: '{{ route('editCheckIn') }}',
-                data: {
-                    '_token': '{{ csrf_token() }}',
-                    'id': id,
-                    'checkin_date': checkin_date
-                },
-                success: function(data) {
-                    location.reload();
-                }
-            });
-        }
-
-        function UpdateCheckOut(id) {
-            var checkInDate = document.getElementById("checkin_date_" + id).value;
-            var duration = parseInt(document.getElementById("duration_" + id).value);
-
-            var date = new Date(checkInDate);
-            date.setDate(date.getDate() + duration);
-
-            var dd = String(date.getDate()).padStart(2, '0');
-            var mm = String(date.getMonth() + 1).padStart(2, '0');
-            var yyyy = date.getFullYear();
-
-            var newDate = dd + '/' + mm + '/' + yyyy;
-            document.getElementById("checkout_date_" + id).innerText = newDate;
-        }
     </script>
 @endsection

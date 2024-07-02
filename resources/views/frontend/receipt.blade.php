@@ -49,8 +49,7 @@
                     <div class="pl-5 ml-5">
                         <p>Your check must include:</p>
                         <ul>
-                            <li>Payment amount: IDR
-                                {{ number_format($total + ($total * 11) / 100 + ($total * 3) / 100, 2) }}
+                            <li>Payment amount: Rp {{ number_format($total + ($total * 11) / 100 + ($total * 3) / 100, 2) }}
                             </li>
                             <li>Payable to the order of {{ $customer->name }}</li>
                             <li>Mail to {{ $customer->email }}</li>
@@ -125,16 +124,9 @@
                         </tr>
                         <tr>
                             <td colspan="3"></td>
-                            <td colspan="2" class="text-left"><strong>Total Tax (11%)</strong>
+                            <td colspan="2" class="text-left"><strong>Tax (11%)</strong>
                             </td>
                             <td><strong>{{ 'Rp ' . number_format(($total * 11) / 100, 2) }}</strong></td>
-                        </tr>
-                        <tr>
-                            <td colspan="3"></td>
-                            <td colspan="2" class="text-left"><strong>Final Booking Total</strong></td>
-                            <td>
-                                <strong>{{ 'Rp ' . number_format($total + ($total * 11) / 100 + ($total * 3) / 100, 2) }}</strong>
-                            </td>
                         </tr>
                         <tr>
                             <td colspan="3"></td>

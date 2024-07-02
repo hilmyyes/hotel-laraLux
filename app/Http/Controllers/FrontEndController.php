@@ -70,20 +70,6 @@ class FrontEndController extends Controller
         session()->put('cart', $cart);
     }
 
-
-    // public function reduceQuantity(Request $request)
-    // {
-    //     $id = $request->id;
-    //     $cart = session()->get('cart');
-    //     if (isset($cart[$id])) {
-    //         if ($cart[$id]['duration'] > 0) {
-    //             $cart[$id]['duration']--;
-    //         }
-    //     }
-    //     session()->forget('cart');
-    //     session()->put('cart', $cart);
-    // }
-
     public function editCheckIn(Request $request)
     {
         $id = $request->id;
@@ -110,6 +96,12 @@ class FrontEndController extends Controller
         session()->forget('cart');
         session()->put('cart', $cart);
         return redirect()->back()->with("status", "Produk Telah dibuang dari Cart");
+    }
+
+    public function deleteAllCart()
+    {
+        session()->forget('cart');
+        return redirect()->back()->with("status", "Semua Cart telah dihapus");
     }
 
     public function checkout(Request $request)
