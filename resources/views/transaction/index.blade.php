@@ -85,12 +85,13 @@
                             <ul>
                                 @foreach ($d->products as $product)
                                     <li>
-                                        IDR. {{ number_format($product->pivot->subtotal, 0, ',', '.') }}
+                                        IDR.
+                                        {{ number_format($product->pivot->subtotal, 2, ',', '.') }}
                                     </li>
                                 @endforeach
                             </ul>
                             <hr>
-                            <strong>IDR. {{ number_format($d->total_price, 0, ',', '.') }}</strong>
+                            <strong>IDR. {{ number_format($d->total_price, 2, ',', '.') }}</strong>
 
                         </td>
 
@@ -270,5 +271,35 @@
         setInterval(function() {
             dateInput.value = updateTime();
         }, 1000);
+
+
+        function removeProduct(productId) {
+            // Konfirmasi penghapusan produk jika diperlukan
+            if (confirm('Are you sure to delete this product?')) {
+                // // Hapus elemen form group berdasarkan productId
+                // var element = document.getElementById('product_' + productId).closest('.form-group');
+                // element.remove();
+
+                // Remove the entire product block
+                var productBlock = document.getElementById('product_' + productId);
+                productBlock.parentNode.removeChild(productBlock);
+
+                // Optionally, clear the duration, checkin_date, and subtotal fields
+                var durationField = document.getElementById('duration_' + productId);
+                if (durationField) {
+                    durationField.value = '';
+                }
+
+                var checkinDateField = document.getElementById('checkin_date_' + productId);
+                if (checkinDateField) {
+                    checkinDateField.value = '';
+                }
+
+                var subtotalField = document.getElementById('subtotal_' + productId);
+                if (subtotalField) {
+                    subtotalField.value = '';
+                }
+            }
+        }
     </script>
 @endsection

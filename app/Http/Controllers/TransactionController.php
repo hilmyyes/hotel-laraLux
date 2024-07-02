@@ -15,8 +15,8 @@ class TransactionController extends Controller
      */
     public function index()
     {
-        $transaction = Transaction::where('user_id', auth()->user()->id)->get();
-        //$transaction = Transaction::all();
+        //$transaction = Transaction::where('user_id', auth()->user()->id)->get();
+        $transaction = Transaction::all();
         //$produk_b = $transaction->products;
 
         foreach ($transaction as $t) {
@@ -47,33 +47,40 @@ class TransactionController extends Controller
      */
     public function store(Request $request)
     {
-        //dd($request);
         $request->validate([
             'user' => 'required',
             'customer' => 'required',
-            'product' => 'required',
-            'quantity' => 'required',
-            'subtotal' => 'required',
+            'products.*' => 'required',
+            'check_in.*' => 'required',
+            'duration.*' => 'required',
+            'subtotal.*' => 'required',
         ]);
 
-        $data = new Transaction();
-        $data->transaction_date = now();
-        $data->user_id = $request->get('user');
-        $data->customer_id = $request->get('customer');
-        $data->save();
+        // Simpan data transaksi
+        $transaction = new Transaction();
+        $transaction->transaction_date = now();
+        $transaction->user_id = $request->input('user');
+        $transaction->customer_id = $request->input('customer');
+        $transaction->save();
 
-        $product = $request->get('product');
-        $quantity = $request->get('quantity');
-        $subtotal = $request->get('subtotal');
+        // Simpan detail produk ke dalam pivot table
+        $products = $request->input('products');
+        $checkIns = $request->input('check_in');
+        $durations = $request->input('duration');
+        $subtotals = $request->input('subtotal');
 
-        // Simpan data produk ke tabel pivot
-        $data->products()->attach($product, [
-            'quantity' => $quantity,
-            'subtotal' => $subtotal,
-        ]);
+        // Loop untuk menyimpan setiap produk
+        for ($i = 0; $i < count($products); $i++) {
+            $transaction->products()->attach($products[$i], [
+                'checkin_date' => $checkIns[$i],
+                'duration' => $durations[$i],
+                'subtotal' => $subtotals[$i],
+            ]);
+        }
 
-        return redirect('transaction')->with('status', 'Berhasil Tambah');
+        return redirect()->route('transaction.index')->with('status', 'Berhasil Tambah Transaksi');
     }
+
 
     /**
      * Display the specified resource.
@@ -104,9 +111,9 @@ class TransactionController extends Controller
     public function update(Request $request, Transaction $transaction)
     {
         // Update transaction data
-        $transaction->user_id = $request->user;
-        $transaction->customer_id = $request->customer;
-        $transaction->save();
+        // $transaction->user_id = $request->user;
+        // $transaction->customer_id = $request->customer;
+        // $transaction->save();
 
         // Clear current products from the transaction
         $transaction->products()->detach();

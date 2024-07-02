@@ -7,12 +7,8 @@
 
         <div class="form-group">
             <label for="user">User</label>
-            <select class="form-control" name="user" required>
-                <option value="" selected disabled>Pilih User</option>
-                @foreach ($users as $u)
-                    <option value="{{ $u->id }}">{{ $u->name }}</option>
-                @endforeach
-            </select>
+            <input type="hidden" name="user" value="{{ Auth::user()->id }}">
+            <input type="text" class="form-control" value="{{ Auth::user()->name }}" readonly>
         </div>
 
         <div class="form-group">
@@ -24,30 +20,88 @@
                 @endforeach
             </select>
         </div>
-        <h3>Product</h3>
-        <div class="form-group">
-            <label for="product">Product</label>
-            <select class="form-control" name="product" required>
-                <option value="" selected disabled>Pilih Product</option>
-                @foreach ($products as $product)
-                    <option value="{{ $product->id }}">{{ $product->name }}</option>
-                @endforeach
-            </select>
+
+        <h3>Products</h3>
+
+        <div id="products-container">
+            <div class="product-item">
+                <div class="form-group">
+                    <label for="product">Product</label>
+                    <select class="form-control" name="products[]" required>
+                        <option value="" selected disabled>Pilih Product</option>
+                        @foreach ($products as $product)
+                            <option value="{{ $product->id }}">{{ $product->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="check_in">Check-in Date</label>
+                    <input type="date" name="check_in[]" class="form-control" placeholder="Enter check_in of Product">
+                </div>
+                <div class="form-group">
+                    <label for="duration">Duration</label>
+                    <input type="text" name="duration[]" class="form-control" placeholder="Enter duration of Product">
+                </div>
+                <div class="form-group">
+                    <label for="subtotal">Subtotal of Product</label>
+                    <input type="text" name="subtotal[]" class="form-control" placeholder="Enter Subtotal of Product">
+                </div>
+                <button type="button" class="btn btn-danger btn-sm delete-product">Delete Product</button>
+            </div>
         </div>
-        <div class="form-group">
-            <label for="name">Quantity of Product</label>
-            <input type="text" name="quantity" class="form-control" id="nameCategory" aria-describedby="nameHelp"
-                placeholder="Enter Quantity of Product">
-            <small id="nameHelp" class="form-text text-muted">Please write down your data here</small>
-        </div>
-        <div class="form-group">
-            <label for="name">Subtotal of Product</label>
-            <input type="text" name="subtotal" class="form-control" id="nameCategory" aria-describedby="nameHelp"
-                placeholder="Enter Subtotal of Product">
-            <small id="nameHelp" class="form-text text-muted">Please write down your data here</small>
-        </div>
+
+        <button type="button" class="btn btn-success mb-3" id="add-product">Add Product</button>
 
         <a class="btn btn-info" href="{{ route('transaction.index') }}">Cancel</a>
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const addProductBtn = document.getElementById('add-product');
+            const productsContainer = document.getElementById('products-container');
+
+            addProductBtn.addEventListener('click', function() {
+                const productItem = document.createElement('div');
+                productItem.classList.add('product-item');
+                productItem.innerHTML = `
+                    <div class="form-group">
+                        <label for="product">Product</label>
+                        <select class="form-control" name="products[]" required>
+                            <option value="" selected disabled>Pilih Product</option>
+                            @foreach ($products as $product)
+                                <option value="{{ $product->id }}">{{ $product->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="check_in">Check-in Date</label>
+                        <input type="date" name="check_in[]" class="form-control" placeholder="Enter check_in of Product">
+                    </div>
+                    <div class="form-group">
+                        <label for="duration">Duration</label>
+                        <input type="text" name="duration[]" class="form-control" placeholder="Enter duration of Product">
+                    </div>
+                    <div class="form-group">
+                        <label for="subtotal">Subtotal of Product</label>
+                        <input type="text" name="subtotal[]" class="form-control" placeholder="Enter Subtotal of Product">
+                    </div>
+                    <button type="button" class="btn btn-danger btn-sm delete-product">Delete Product</button>
+                `;
+                productsContainer.appendChild(productItem);
+            });
+
+            // Add event listener for deleting product
+            productsContainer.addEventListener('click', function(e) {
+                if (e.target.classList.contains('delete-product')) {
+                    const productItem = e.target.closest('.product-item');
+                    if (productsContainer.childElementCount > 1) {
+                        productsContainer.removeChild(productItem);
+                    } else {
+                        alert('At least one product is required.');
+                    }
+                }
+            });
+        });
+    </script>
 @endsection
