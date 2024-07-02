@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Facilities;
 use App\Models\Hotel;
 use App\Models\Product;
 use Illuminate\Http\Request;
@@ -46,7 +47,8 @@ class ProductController extends Controller
     public function create()
     {
         $datas = Hotel::orderBy('name')->get();
-        return view("product.create", compact('datas'));
+        $facilities = Facilities::orderBy('name')->get();
+        return view("product.create", compact('datas', 'facilities'));
     }
 
     /**
@@ -58,6 +60,8 @@ class ProductController extends Controller
             'name' => 'required',
             'price' => 'required',
             'hotel' => 'required',
+            'facilities' => 'required|array', // Validate that facilities are provided
+            'facilities.*' => 'exists:facilities,id', // Validate that each facility exists
         ]);
 
         $data = new Product();
@@ -68,6 +72,9 @@ class ProductController extends Controller
         $data->available_room = $request->get('room');
         $data->hotel_id = $request->get('hotel');
         $data->save();
+
+        
+        $data->facilities()->attach($request->get('facilities'));
 
         return redirect('product')->with('status', 'Berhasil Tambah');
     }
