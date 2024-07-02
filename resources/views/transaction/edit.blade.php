@@ -25,14 +25,10 @@
             <label for="customer">Customer</label>
             <select class="form-control" name="customer" required>
                 @if ($data)
-                    <option value="{{ $data->customer_id }}" selected>{{ $data->customer->name }}</option>
+                    <option value="{{ $data->user_id }}" selected>{{ $data->user->name }}</option>
                 @else
                     <option selected disabled>Select a customer</option>
                 @endif
-
-                @foreach ($customers as $c)
-                    <option value="{{ $c->id }}">{{ $c->name }}</option>
-                @endforeach
             </select>
         </div>
 

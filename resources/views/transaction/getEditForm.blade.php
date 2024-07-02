@@ -4,13 +4,8 @@
     <h2>Edit Transaction</h2>
 
     <div class="form-group">
-        <label for="user">Employee</label>
-        <input type="text" name="user" class="form-control" value="{{ $data->user->name }}" readonly>
-    </div>
-
-    <div class="form-group">
-        <label for="customer">Customer</label>
-        <input type="text" name="customer" class="form-control" value="{{ $data->customer->name }}" readonly>
+        <label for="user">Customer</label>
+        <input type="text" name="customer" class="form-control" value="{{ $data->user->name }}" readonly>
     </div>
 
     <h3>Products</h3>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Models\ProductTransaction;
 use App\Models\Transaction;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -108,11 +109,22 @@ class FrontEndController extends Controller
     {
         $cart = session('cart');
         $user = Auth::user();
+        $customer = $user;
+
+        $total = array_reduce($cart, function ($carry, $item) {
+            return $carry + $item['duration'] * $item['price'];
+        }, 0);
+
+        $points_redeemed = $request->points;
+        $pointsEarned = round(($total - $points_redeemed * 100000) /300000);
+        $customer->points += $pointsEarned;
+        $customer->save();
 
         $t = new Transaction();
         $t->user_id = $user->id;
-        $t->customer_id = 1; //need to fix later
         $t->transaction_date = Carbon::now()->toDateTimeString();
+        $t->points_earned = $pointsEarned;
+        $t->points_redeemed = $request->points;
         $t->save();
 
         $transactionId = $t->id;
@@ -125,18 +137,12 @@ class FrontEndController extends Controller
             $checkinDate = date('Y-m-d', strtotime(str_replace('-', '/', $c['checkin_date'])));
             $newProdTrans->checkin_date = $checkinDate;
             $newProdTrans->duration = $c['duration'];
-
             $subtotal = $c['duration'] * $c['price'];
             $newProdTrans->subtotal = $subtotal;
             $newProdTrans->save();
         }
 
-        $total = array_reduce($cart, function ($carry, $item) {
-            return $carry + $item['duration'] * $item['price'];
-        }, 0);
-
         $transaction = Transaction::findOrFail($transactionId);
-        $customer = $user;
         $status = 'Your order on Laralux Reservation System is complete.';
 
         session()->forget('cart');

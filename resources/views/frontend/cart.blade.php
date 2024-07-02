@@ -87,8 +87,8 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="coupon">
-                            <input type="text" placeholder="Coupon Code">
-                            <button>Apply Code</button>
+                            <input type="number" min="0" max="{{ Auth::user()->points }}" value="0"
+                                name="points" id="points" oninput="updateTotal()">
                         </div>
                     </div><br><br>
                     <div class="col-md-12">
@@ -104,10 +104,24 @@
                                             <p>{{ 'Rp ' . number_format($total, 2) }}</p>
                                         </td>
                                     </tr>
+
+                                    <tr>
+                                        <th scope="row">Value of Points Redeemed (exc. Tax)</th>
+                                        <td id="pointsValue"></td>
+                                    </tr>
+
                                     <tr>
                                         <th scope="row">Tax (11%)</th>
                                         <td>
                                             <p>{{ 'Rp ' . number_format(($total * 11) / 100, 2) }}</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Points Earned:</th>
+                                        <td>
+                                            <p>
+                                                {{ '+ ' . number_format($total / 300000) }}
+                                            </p>
                                         </td>
                                     </tr>
                                     <tr>
@@ -122,7 +136,8 @@
                             </div>
                             <div class="cart-btn d-flex ">
                                 <a class="btn btn-xs" href="{{ route('laralux.index') }}">Continue Shopping</a>
-                                <a class="btn btn-xs mr-5" href="{{ route('laralux.checkout') }}" style="margin-left: 155px">Checkout</a>
+                                <a class="btn btn-xs mr-5" href="{{ route('laralux.checkout') }}"
+                                    style="margin-left: 155px">Checkout</a>
                             </div>
                         </div>
                     </div>
@@ -174,5 +189,12 @@
                 });
             });
         });
+
+        function updateTotal() {
+            var points = document.getElementById('points').value;
+            var valueRedeemed = points * 100000;
+
+            document.getElementById('pointsValue').textContent = ' - Rp ' + valueRedeemed;
+        }
     </script>
 @endsection

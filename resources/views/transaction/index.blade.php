@@ -42,7 +42,7 @@
                     <tr id="tr_{{ $d->id }}">
                         <td>{{ $d->id }}</td>
                         <td>{{ $d->created_at }}</td>
-                        <td>{{ $d->customer->name }}</td>
+                        <td>{{ $d->user->name }}</td>
                         <td>
                             <ul>
                                 @foreach ($d->products as $product)
@@ -125,69 +125,6 @@
                 <img src="https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif" alt="Loading..."
                     style="width: 100px;">
                 <p>Loading...</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Create Modal -->
-    <div class="modal fade" id="modalCreate" tabindex="-1" role="basic" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h2 class="modal-title">Add New Type</h2>
-                </div>
-                <div class="modal-body">
-                    <form method="POST" action="{{ route('transaction.store') }}">
-                        @csrf
-                        <h2>Add new Transaction</h2>
-
-                        <div class="form-group">
-                            <label for="user">User</label>
-                            <select class="form-control" name="user" required>
-                                <option value="" selected disabled>Pilih User</option>
-                                @foreach ($users as $u)
-                                    <option value="{{ $u->id }}">{{ $u->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="customer">Customer</label>
-                            <select class="form-control" name="customer" required>
-                                <option value="" selected disabled>Pilih Customer</option>
-                                @foreach ($customers as $c)
-                                    <option value="{{ $c->id }}">{{ $c->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <h3>Product</h3>
-                        <div class="form-group">
-                            <label for="product">Product</label>
-                            <select class="form-control" name="product" required>
-                                <option value="" selected disabled>Pilih Product</option>
-                                @foreach ($products as $product)
-                                    <option value="{{ $product->id }}">{{ $product->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="name">Quantity of Product</label>
-                            <input type="text" name="quantity" class="form-control" id="nameCategory"
-                                aria-describedby="nameHelp" placeholder="Enter Quantity of Product">
-                            <small id="nameHelp" class="form-text text-muted">Please write down your data here</small>
-                        </div>
-                        <div class="form-group">
-                            <label for="name">Subtotal of Product</label>
-                            <input type="text" name="subtotal" class="form-control" id="nameCategory"
-                                aria-describedby="nameHelp" placeholder="Enter Subtotal of Product">
-                            <small id="nameHelp" class="form-text text-muted">Please write down your data here</small>
-                        </div>
-
-                        <a class="btn btn-info" href="{{ route('transaction.index') }}">Cancel</a>
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                    </form>
-                </div>
             </div>
         </div>
     </div>

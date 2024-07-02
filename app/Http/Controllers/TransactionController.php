@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cart;
-use App\Models\Customer;
 use App\Models\Product;
 use App\Models\ProductTransaction;
 use App\Models\Transaction;
@@ -27,10 +26,7 @@ class TransactionController extends Controller
             $t->total_price = $t->products->sum('pivot.subtotal');
         }
 
-        $products = Product::all();
-        $users = User::orderBy('name')->get();
-        $customers = Customer::orderBy('name')->get();
-        return view('transaction.index', compact('transaction', 'users', 'customers', 'products'));
+        return view('transaction.index', compact('transaction'));
     }
 
     /**
@@ -41,46 +37,16 @@ class TransactionController extends Controller
     public function create()
     {
         $products = Product::all();
-        $users = User::orderBy('name')->get();
-        $customers = Customer::orderBy('name')->get();
-        return view("transaction.create", compact('users', 'customers', 'products'));
+        $customers = User::where('role', 'guest')->orderBy('name')->get();
+        return view("transaction.create", compact('customers', 'products'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
-<<<<<<< HEAD
-        try {
-            $data = new Transaction;
-            $data->user_id = Auth::id();
-            $data->save();
-
-            $transactionId = $data->id;
-            $carts = Cart::where('user_id', Auth::id())->get();
-
-            foreach ($carts as $c) {
-                $newProdTrans = new ProductTransaction();
-                $newProdTrans->product_id = $c['id'];
-                $newProdTrans->transaction_id = $transactionId;
-                $newProdTrans->checkin_date = $c['checkin_date'];
-                $newProdTrans->duration = $c['duration'];
-                $newProdTrans->subtotal = $c['subtotal'];
-                $newProdTrans->save();
-            }
-
-            Cart::where('user_id', Auth::id())->delete();
-
-            return redirect("cart/")->with('status', 'Berhasil Tambah');
-
-        } catch (QueryException $e) {
-            return back()->withInput()->withErrors(['error' => 'Error storing cart item: ' . $e->getMessage()]);
-        }
-=======
-        $request->validate([
+    {        $request->validate([
             'user' => 'required',
-            'customer' => 'required',
             'products.*' => 'required',
             'check_in.*' => 'required',
             'duration.*' => 'required',
@@ -90,8 +56,7 @@ class TransactionController extends Controller
         // Simpan data transaksi
         $transaction = new Transaction();
         $transaction->transaction_date = now();
-        $transaction->user_id = $request->input('user');
-        $transaction->customer_id = $request->input('customer');
+        $transaction->user_id = $request->input('customer');
         $transaction->save();
 
         // Simpan detail produk ke dalam pivot table
@@ -110,7 +75,6 @@ class TransactionController extends Controller
         }
 
         return redirect()->route('transaction.index')->with('status', 'Berhasil Tambah Transaksi');
->>>>>>> origin/transaction_daniel
     }
 
 
@@ -129,11 +93,9 @@ class TransactionController extends Controller
     {
         $data = $transaction;
         $products = Product::all();
-        $users = User::orderBy('name')->get();
-        $customers = Customer::orderBy('name')->get();
         $transactionProduct = $transaction->products()->first(); // Mengambil produk dari pivot table
 
-        return view('transaction.edit', compact('data', 'products', 'users', 'customers', 'transactionProduct'));
+        return view('transaction.edit', compact('data', 'products', 'transactionProduct'));
     }
 
 
@@ -142,11 +104,6 @@ class TransactionController extends Controller
      */
     public function update(Request $request, Transaction $transaction)
     {
-        // Update transaction data
-        // $transaction->user_id = $request->user;
-        // $transaction->customer_id = $request->customer;
-        // $transaction->save();
-
         // Clear current products from the transaction
         $transaction->products()->detach();
 
@@ -193,18 +150,10 @@ class TransactionController extends Controller
         $id = ($request->get('id'));
         $data = Transaction::find($id);
         $products = $data->products;
-<<<<<<< HEAD
-        return response()->json(
-            array(
-                'msg' => view('transaction.showModal', compact('data', 'products'))->render()
-            ),
-            200
-        );
-=======
+
         return response()->json(array(
             'msg' => view('transaction.showM  odal', compact('data', 'products'))->render()
         ), 200);
->>>>>>> origin/transaction_daniel
     }
 
     public function getEditForm(Request $request)
@@ -213,21 +162,10 @@ class TransactionController extends Controller
         $data = Transaction::with('products')->find($id); // Load all related products
         $products = Product::all();
         $users = User::orderBy('name')->get();
-        $customers = Customer::orderBy('name')->get();
-<<<<<<< HEAD
-        $transactionProduct = $data->products()->first();
-        return response()->json(
-            array(
-                'status' => 'oke',
-                'msg' => view('transaction.getEditForm', compact('data', 'products', 'users', 'customers', 'transactionProduct'))->render()
-            )
-        );
-=======
         return response()->json(array(
             'status' => 'oke',
-            'msg' => view('transaction.getEditForm', compact('data', 'products', 'users', 'customers'))->render()
+            'msg' => view('transaction.getEditForm', compact('data', 'products', 'users'))->render()
         ));
->>>>>>> origin/transaction_daniel
     }
 
 

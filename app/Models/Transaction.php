@@ -19,10 +19,6 @@ class Transaction extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function customer(): BelongsTo
-    {
-        return $this->belongsTo(Customer::class, 'customer_id');
-    }
 
     public function products(): BelongsToMany
     {
