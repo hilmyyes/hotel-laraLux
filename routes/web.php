@@ -134,7 +134,7 @@ Route::post('cart/getEditForm', [CartController::class, 'getEditForm'])->name('c
 Route::post('cart/saveDataTD', [CartController::class, 'saveDataTD'])->name('cart.saveDataTD');
 
 Route::post('cart/deleteData', [CartController::class, 'deleteData'])->name('cart.deleteData');
-Route::get('/product-price/{id}', [ProductController::class, 'getPrice'])->name('product.price');
+Route::get('/product/price/{id}', [TransactionController::class, 'getPrice'])->name('product.price');
 
 Auth::routes();
 

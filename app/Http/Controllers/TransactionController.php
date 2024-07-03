@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Cart;
-use App\Models\Product;
-use App\Models\ProductTransaction;
-use App\Models\Transaction;
 use App\Models\User;
-use Illuminate\Database\QueryException;
+use App\Models\Product;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
+use App\Models\ProductTransaction;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\QueryException;
 
 class TransactionController extends Controller
 {
@@ -68,8 +69,9 @@ class TransactionController extends Controller
 
         // Loop untuk menyimpan setiap produk
         for ($i = 0; $i < count($products); $i++) {
+            $checkin_date = Carbon::createFromFormat('d-m-Y', explode(' - ', $checkIns[$i])[0])->format('Y-m-d');
             $transaction->products()->attach($products[$i], [
-                'checkin_date' => $checkIns[$i],
+                'checkin_date' => $checkin_date,
                 'duration' => $durations[$i],
                 'subtotal' => $subtotals[$i],
             ]);
@@ -103,29 +105,44 @@ class TransactionController extends Controller
     /**
      * Update the specified resource in storage.
      */
+
     public function update(Request $request, Transaction $transaction)
     {
+        // Validate the request inputs
+        $request->validate([
+            'products.*' => 'required',
+            'check_in.*' => 'required|date_format:d-m-Y', // Validate format as day-month-year
+            'duration.*' => 'required',
+            'subtotal.*' => 'required',
+        ]);
+
         // Clear current products from the transaction
         $transaction->products()->detach();
 
-        // Iterate through each product to update pivot data
-        foreach ($request->products as $productData) {
-            $product = $productData['product'];
-            $checkin_date = $productData['checkin_date'];
-            $duration = $productData['duration'];
-            $subtotal = $productData['subtotal'];
+        // Retrieve inputs from the request
+        $products = $request->input('products');
+        $checkIns = $request->input('check_in');
+        $durations = $request->input('duration');
+        $subtotals = $request->input('subtotal');
 
-            // Update pivot data
-            $transaction->products()->attach($product, [
+        foreach ($products as $key => $productId) {
+            // Convert check_in date to Y-m-d format
+            $checkin_date = Carbon::createFromFormat('d-m-Y', $checkIns[$key])->format('Y-m-d');
+
+            // Attach product to transaction with additional data
+            $transaction->products()->attach($productId, [
                 'checkin_date' => $checkin_date,
-                'duration' => $duration,
-                'subtotal' => $subtotal
+                'duration' => $durations[$key],
+                'subtotal' => $subtotals[$key],
             ]);
         }
 
-        // Redirect to index page with success message
+        // Redirect after successful update
         return redirect()->route('transaction.index')->with('status', 'Transaction updated successfully!');
     }
+
+
+
 
 
     /**
@@ -161,10 +178,9 @@ class TransactionController extends Controller
         $id = $request->id;
         $data = Transaction::with('products')->find($id); // Load all related products
         $products = Product::all();
-        $users = User::orderBy('name')->get();
         return response()->json(array(
             'status' => 'oke',
-            'msg' => view('transaction.getEditForm', compact('data', 'products', 'users'))->render()
+            'msg' => view('transaction.getEditForm', compact('data', 'products'))->render()
         ));
     }
 
@@ -183,45 +199,13 @@ class TransactionController extends Controller
         );
     }
 
-    public function insertProducts($cart, $user)
-    {
-        $total = 0;
-        foreach ($cart as $c) {
-            # code...
-            $subtotal = $c['quantity'] * $c['price'];
-            $total += $subtotal;
-            $this->products()->attach($c['id'], ['quantity' => $c['quantity'], 'subtotal' => $subtotal]);
-        }
-    }
 
-    public function addToCart($id)
-    {
-        $product = Product::find($id);
-        $cart = session()->get('cart');
-        if (!isset($cart[$id])) {
-            $cart[$id] = [
-                'id' => $id,
-                'name' => $product->name,
-                'description' => $product->description,
-                'checkin_date' => now()->format('d-m-Y'),
-                'duration' => 1,
-                'price' => $product->price,
-                'photo' => $product->image,
-            ];
-        } else {
-            $cart[$id]['duration']++;
-        }
-
-        session()->put('cart', $cart);
-        return redirect()->back()->with("status", "Produk Telah ditambahkan ke Cart");
-    }
 
     public function getPrice($id)
     {
-        dd($id);
-        $products = Product::find($id);
-        if ($products) {
-            return response()->json(['price' => $products->price]);
+        $product = Product::find($id);
+        if ($product) {
+            return response()->json(['price' => $product->price]);
         } else {
             return response()->json(['error' => 'Product not found'], 404);
         }

@@ -46,7 +46,8 @@
                 </div>
                 <div class="form-group">
                     <label for="subtotal">Subtotal of Product</label>
-                    <input type="text" name="subtotal[]" class="form-control" placeholder="Enter Subtotal of Product" readonly>
+                    <input type="text" name="subtotal[]" class="form-control" placeholder="Enter Subtotal of Product"
+                        readonly>
                 </div>
                 <button type="button" class="btn btn-danger btn-sm delete-product">Delete Product</button>
             </div>
@@ -64,13 +65,6 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/moment/min/moment.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-
-
-    <!-- Include daterangepicker CSS and JS -->
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/moment/min/moment.min.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const addProductBtn = document.getElementById('add-product');
@@ -159,6 +153,7 @@
                     }
                 });
             };
+
 
             // Initialize daterangepicker on existing elements
             document.querySelectorAll('.date-range-picker').forEach(element => {
