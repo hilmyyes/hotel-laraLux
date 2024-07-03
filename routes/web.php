@@ -24,10 +24,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('home');
-})->name('home');
 
+// view only and can be guess
 Route::get('/kategori', function () {
     return view('kategori');
 })->name('kategori');
@@ -44,7 +42,22 @@ Route::get('/contact', function () {
     return view('contact');
 })->name('contact');
 
+Route::get('/', function () {
+    return view('welcome');
+})->name('welcome');
+
+Route::get('/home', function () {
+    return view('welcome');
+})->name('home');
+
+
 Route::middleware(['auth'])->group(function () {
+
+
+    Route::get('/admin', function () {
+        return view('admin');
+    })->name('admin')->middleware('RoleChecker:owner');
+
     Route::resource('hotel', HotelController::class);
 
     Route::resource('product', ProductController::class);
@@ -54,6 +67,9 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('customer', CustomerController::class);
 
     Route::resource('cart', CartController::class);
+
+
+
 
     Route::get('/laralux', [FrontEndController::class, 'index'])->name('laralux.index');
 
@@ -120,7 +136,6 @@ Route::post('cart/saveDataTD', [CartController::class, 'saveDataTD'])->name('car
 Route::post('cart/deleteData', [CartController::class, 'deleteData'])->name('cart.deleteData');
 Route::get('/product-price/{id}', [ProductController::class, 'getPrice'])->name('product.price');
 
-
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
@@ -138,6 +153,11 @@ Route::get('product/uploadPhoto/{product_id}', [ProductController::class, 'uploa
 Route::post('product/simpanPhoto', [ProductController::class, 'simpanPhoto'])->name('product.simpanPhoto');
 
 Route::post('product/delPhoto', [ProductController::class, 'delPhoto']);
+
+
+
+
+
 
 Route::get('/laralux', [FrontEndController::class, 'index'])->name('laralux.index');
 
