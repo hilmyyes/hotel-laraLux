@@ -105,11 +105,13 @@ class TransactionController extends Controller
     /**
      * Update the specified resource in storage.
      */
+
     public function update(Request $request, Transaction $transaction)
     {
+        // Validate the request inputs
         $request->validate([
             'products.*' => 'required',
-            'check_in.*' => 'required',
+            'check_in.*' => 'required|date_format:d-m-Y', // Validate format as day-month-year
             'duration.*' => 'required',
             'subtotal.*' => 'required',
         ]);
@@ -117,25 +119,30 @@ class TransactionController extends Controller
         // Clear current products from the transaction
         $transaction->products()->detach();
 
-        // Loop untuk menyimpan setiap produk
+        // Retrieve inputs from the request
         $products = $request->input('products');
         $checkIns = $request->input('check_in');
         $durations = $request->input('duration');
         $subtotals = $request->input('subtotal');
 
-        // Loop untuk menyimpan setiap produk
-        for ($i = 0; $i < count($products); $i++) {
-            $checkin_date = Carbon::createFromFormat('d-m-Y', explode(' - ', $checkIns[$i])[0])->format('d-m-Y');
-            $transaction->products()->attach($products[$i], [
+        foreach ($products as $key => $productId) {
+            // Convert check_in date to Y-m-d format
+            $checkin_date = Carbon::createFromFormat('d-m-Y', $checkIns[$key])->format('Y-m-d');
+
+            // Attach product to transaction with additional data
+            $transaction->products()->attach($productId, [
                 'checkin_date' => $checkin_date,
-                'duration' => $durations[$i],
-                'subtotal' => $subtotals[$i],
+                'duration' => $durations[$key],
+                'subtotal' => $subtotals[$key],
             ]);
         }
 
-
+        // Redirect after successful update
         return redirect()->route('transaction.index')->with('status', 'Transaction updated successfully!');
     }
+
+
+
 
 
     /**
@@ -171,10 +178,9 @@ class TransactionController extends Controller
         $id = $request->id;
         $data = Transaction::with('products')->find($id); // Load all related products
         $products = Product::all();
-        $users = User::orderBy('name')->get();
         return response()->json(array(
             'status' => 'oke',
-            'msg' => view('transaction.getEditForm', compact('data', 'products', 'users'))->render()
+            'msg' => view('transaction.getEditForm', compact('data', 'products'))->render()
         ));
     }
 

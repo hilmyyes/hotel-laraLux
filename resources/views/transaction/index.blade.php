@@ -98,10 +98,10 @@
                         <td>
                             {{-- <a class="btn btn-success" data-toggle="modal" href="#myModal"
                                 onclick="getDetailData({{ $d->id }})"> Rincian Pembelian</a> --}}
-                            {{-- <a class="btn btn-warning" href="{{ route('transaction.edit', $d->id) }}">Edit</a> --}}
-                            <a href="#modalEditA" class="btn btn-warning
+                            <a class="btn btn-warning" href="{{ route('transaction.edit', $d->id) }}">Edit</a>
+                            {{-- <a href="#modalEditA" class="btn btn-warning
                             " data-toggle="modal"
-                                onclick="getEditForm({{ $d->id }})">Edit</a>
+                                onclick="getEditForm({{ $d->id }})">Edit</a> --}}
                             {{-- <a href="#" value="DeleteNoReload" class="btn btn-danger"
                                 onclick="if(confirm('Are you sure to delete {{ $d->id }} - {{ $d->name }} ? ')) deleteDataRemoveTR({{ $d->id }})">Delete
                                 without Reload</a> --}}
@@ -145,16 +145,16 @@
 
 @section('javascript')
     <script>
-        function getDetailData(id) {
-            $.ajax({
-                type: 'POST',
-                url: '{{ route('transaction.showAjax') }}',
-                data: '_token= <?php echo csrf_token(); ?> &id=' + id,
-                success: function(data) {
-                    $("#msg").html(data.msg);
-                }
-            });
-        }
+        // function getDetailData(id) {
+        //     $.ajax({
+        //         type: 'POST',
+        //         url: '{{ route('transaction.showAjax') }}',
+        //         data: '_token= <?php echo csrf_token(); ?> &id=' + id,
+        //         success: function(data) {
+        //             $("#msg").html(data.msg);
+        //         }
+        //     });
+        // }
 
         function getEditForm(transaction_id) {
             $.ajax({
@@ -170,21 +170,21 @@
             });
         }
 
-        function deleteDataRemoveTR(transaction_id) {
-            $.ajax({
-                type: 'POST',
-                url: '{{ route('transaction.deleteData') }}',
-                data: {
-                    '_token': '<?php echo csrf_token(); ?>',
-                    'id': transaction_id
-                },
-                success: function(data) {
-                    if (data.status == "oke") {
-                        $('#tr_' + transaction_id).remove();
-                    }
-                }
-            });
-        }
+        // function deleteDataRemoveTR(transaction_id) {
+        //     $.ajax({
+        //         type: 'POST',
+        //         url: '{{ route('transaction.deleteData') }}',
+        //         data: {
+        //             '_token': '<?php echo csrf_token(); ?>',
+        //             'id': transaction_id
+        //         },
+        //         success: function(data) {
+        //             if (data.status == "oke") {
+        //                 $('#tr_' + transaction_id).remove();
+        //             }
+        //         }
+        //     });
+        // }
 
         // Fungsi untuk mendapatkan waktu saat ini dalam format yang diinginkan
         function updateTime() {
@@ -208,35 +208,27 @@
         setInterval(function() {
             dateInput.value = updateTime();
         }, 1000);
+    </script>
+    <script>
+        $(document).ready(function() {
+            // Event listener for duration input changes
+            $('.duration-input').on('input', function() {
+                updateSubtotal($(this));
+            });
 
-
-        function removeProduct(productId) {
-            // Konfirmasi penghapusan produk jika diperlukan
-            if (confirm('Are you sure to delete this product?')) {
-                // // Hapus elemen form group berdasarkan productId
-                // var element = document.getElementById('product_' + productId).closest('.form-group');
-                // element.remove();
-
-                // Remove the entire product block
-                var productBlock = document.getElementById('product_' + productId);
-                productBlock.parentNode.removeChild(productBlock);
-
-                // Optionally, clear the duration, checkin_date, and subtotal fields
-                var durationField = document.getElementById('duration_' + productId);
-                if (durationField) {
-                    durationField.value = '';
-                }
-
-                var checkinDateField = document.getElementById('checkin_date_' + productId);
-                if (checkinDateField) {
-                    checkinDateField.value = '';
-                }
-
-                var subtotalField = document.getElementById('subtotal_' + productId);
-                if (subtotalField) {
-                    subtotalField.value = '';
-                }
+            // Function to update subtotal based on duration and product price
+            function updateSubtotal(input) {
+                var duration = input.val();
+                var productId = input.closest('.product-block').attr('id').split('_')[1];
+                var price = $('select[name="products[' + productId + '][product]"] option:selected').data('price');
+                var subtotal = duration * price;
+                $('input[name="products[' + productId + '][subtotal]"]').val(subtotal.toFixed(2));
             }
-        }
+
+            // Initialize subtotal values on page load
+            $('.duration-input').each(function() {
+                updateSubtotal($(this));
+            });
+        });
     </script>
 @endsection

@@ -109,10 +109,13 @@
                                     </div>
                                 </div>
                             </td>
-                            <td>
+                            {{-- <td>
                                 @if ($hotel->typeWithTrashed)
                                     {{ $hotel->typeWithTrashed->name }}
                                 @endif
+                            </td> --}}
+                            <td>
+                                <a class="btn btn-danger" href="#detail_{{ $hotel->id }}" data-toggle="modal">delete</a>
                             </td>
 
                         </tr>
