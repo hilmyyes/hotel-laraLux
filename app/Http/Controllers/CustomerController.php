@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Customer;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class CustomerController extends Controller
@@ -12,7 +12,7 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        $customers = Customer::all();
+        $customers = User::where('role', 'guest')->orderBy('name')->get();
 
         return view('customer.index', ['customers' => $customers]);
     }
@@ -30,25 +30,25 @@ class CustomerController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required',
-            'address' => 'required'
-        ]);
+        // $request->validate([
+        //     'name' => 'required',
+        //     'address' => 'required'
+        // ]);
 
-        // Type::create($request->all());
+        // // Type::create($request->all());
 
-        $data = new Customer();
-        $data->name = $request->get('name');
-        $data->address = $request->get('address');
-        $data->save();
+        // $data = new User();
+        // $data->name = $request->get('name');
+        // $data->address = $request->get('address');
+        // $data->save();
 
-        return redirect('customer')->with('status', 'Berhasil Tambah');
+        // return redirect('customer')->with('status', 'Berhasil Tambah');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Customer $customer)
+    public function show(User $customer)
     {
         //
     }
@@ -56,7 +56,7 @@ class CustomerController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Customer $customer)
+    public function edit(User $customer)
     {
         $data = $customer;
         return view('customer.edit', compact('data'));
@@ -65,7 +65,7 @@ class CustomerController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Customer $customer)
+    public function update(Request $request, User $customer)
     {
         $updatedData = $customer;
         $updatedData->name = $request->name;
@@ -77,7 +77,7 @@ class CustomerController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Customer $customer)
+    public function destroy(User $customer)
     {
         try {
             $deletedData = $customer;
@@ -94,7 +94,7 @@ class CustomerController extends Controller
     public function getEditForm(Request $request)
     {
         $id = $request->id;
-        $data = Customer::find($id);
+        $data = User::find($id);
         return response()->json(array(
             'status' => 'oke',
             'msg' => view('customer.getEditForm', compact('data'))->render()
@@ -104,7 +104,7 @@ class CustomerController extends Controller
     public function deleteData(Request $request)
     {
         $id = $request->id;
-        $data = Customer::find($id);
+        $data = User::find($id);
         $data->delete();
         return response()->json(array(
             'status' => 'oke',

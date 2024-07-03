@@ -9,6 +9,7 @@ use App\Models\Product;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Models\ProductTransaction;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\QueryException;
 
@@ -106,41 +107,50 @@ class TransactionController extends Controller
      * Update the specified resource in storage.
      */
 
+
     public function update(Request $request, Transaction $transaction)
     {
+        //dd($request);
         // Validate the request inputs
         $request->validate([
-            'products.*' => 'required',
-            'check_in.*' => 'required|date_format:d-m-Y', // Validate format as day-month-year
-            'duration.*' => 'required',
-            'subtotal.*' => 'required',
+            'product.*' => 'required|integer|exists:products,id',
+            'check_in.*' => 'required|date_format:Y-m-d',
+            'duration.*' => 'required|integer|min:1',
+            'subtotal.*' => 'required|numeric',
         ]);
 
-        // Clear current products from the transaction
-        $transaction->products()->detach();
-
         // Retrieve inputs from the request
-        $products = $request->input('products');
-        $checkIns = $request->input('check_in');
-        $durations = $request->input('duration');
-        $subtotals = $request->input('subtotal');
+        $products = $request->input('product', []);
+        $checkIns = $request->input('check_in', []);
+        $durations = $request->input('duration', []);
+        $subtotals = $request->input('subtotal', []);
 
+
+        //dd($products, $checkIns,  $durations, $subtotals);
+        $syncData = [];
         foreach ($products as $key => $productId) {
-            // Convert check_in date to Y-m-d format
-            $checkin_date = Carbon::createFromFormat('d-m-Y', $checkIns[$key])->format('Y-m-d');
 
-            // Attach product to transaction with additional data
-            $transaction->products()->attach($productId, [
-                'checkin_date' => $checkin_date,
-                'duration' => $durations[$key],
-                'subtotal' => $subtotals[$key],
-            ]);
+            $checkin_date = Carbon::createFromFormat('Y-m-d', $checkIns[$key])->format('Y-m-d');
+
+            $updateData = [
+                'checkin_date' => $checkIns[$key], // Update only if changed
+                'duration' => $durations[$key],  // Update only if changed
+                'subtotal' => $subtotals[$key],   // Update only if changed
+            ];
+
+            //dd($updateData);
+            // Include data in syncData only if there are changes
+            if (array_filter($updateData)) {
+                $syncData[$productId] = $updateData;
+            }
         }
+
+        $transaction->products()->syncWithoutDetaching($syncData);
 
         // Redirect after successful update
         return redirect()->route('transaction.index')->with('status', 'Transaction updated successfully!');
+        //return $syncData;
     }
-
 
 
 
