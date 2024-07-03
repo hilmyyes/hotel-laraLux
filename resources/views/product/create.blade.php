@@ -1,4 +1,4 @@
-@extends('layout.conquer')
+@extends('layouts.admin')
 
 @section('content')
     <form method="POST" action="{{ route('product.store') }}">

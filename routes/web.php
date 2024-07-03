@@ -1,17 +1,19 @@
 <?php
 
+use App\Models\Facilities;
+use App\Http\Controllers\Customer;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Transaction;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CartController;
-use App\Http\Controllers\FrontEndController;
-use App\Http\Controllers\HotelController; // jangan lupa di use
+use App\Http\Controllers\TypeController;
 use App\Http\Controllers\ordercontroller;
 use App\Http\Controllers\ProductController;
-use App\Http\Controllers\TypeController;
-use App\Http\Controllers\Customer;
 use App\Http\Controllers\CustomerController;
-use App\Http\Controllers\Transaction;
+use App\Http\Controllers\FrontEndController;
+use App\Http\Controllers\FacilitiesController;
 use App\Http\Controllers\TransactionController;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HotelController; // jangan lupa di use
 
 /*
 |--------------------------------------------------------------------------
@@ -24,6 +26,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/admintesting', function () {
+    return view('layouts.index');
+})->name('admintesting');
 
 // view only and can be guess
 Route::get('/kategori', function () {
@@ -68,14 +73,18 @@ Route::middleware(['auth'])->group(function () {
 
     Route::resource('cart', CartController::class);
 
-
-
+    Route::resource('facilities', FacilitiesController::class);
 
     Route::get('/laralux', [FrontEndController::class, 'index'])->name('laralux.index');
 
     Route::get('laralux/user/cart', function () {
         return view('frontend.cart');
     })->name('cart');
+
+
+    Route::get('/welcomeadmin', function () {
+        return view('layouts.welcomeadmin');
+    })->name('welcomeadmin');
 
 
     Route::get('/laralux/{laralux}', [
@@ -157,7 +166,7 @@ Route::post('product/simpanPhoto', [ProductController::class, 'simpanPhoto'])->n
 Route::post('product/delPhoto', [ProductController::class, 'delPhoto']);
 
 
-
+Route::post('facilities/getEditForm', [FacilitiesController::class, 'getEditForm'])->name('facilities.getEditForm');
 
 
 

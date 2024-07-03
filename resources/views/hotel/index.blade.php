@@ -1,150 +1,110 @@
-{{-- ini adalah index hotel
-<a href="{{ route('hotel.create') }}"> klik ini untuk lanjut ke create controller</a>
-
-
-<ul>
-    @foreach ($hotels as $i)
-        <li>{{ $i->name }}</li>
-    @endforeach
-</ul> --}}
-
-
-@extends('layout.conquer')
+@extends('layouts.admin')
 
 @section('content')
-    <!DOCTYPE html>
-    <html lang="en">
+    <div class="container-fluid">
 
-    <head>
-        <title>Bootstrap Example</title>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-    </head>
+        <!-- Page Heading -->
+        <h1 class="h3 mb-2 text-gray-800">Hotel</h1>
+        @if (@session('status'))
+            <div class="alert alert-success">{{ session('status') }}</div>
+        @endif
+        <a class="btn btn-success" href="{{ route('hotel.create') }}">+ New Hotel</a>
 
-    <body>
-
-        <div class="container">
-            <a class="btn btn-success" href="{{ route('hotel.create') }}">+ new Hotel</a>
-            <h2>HOTELS</h2>
-            <p>this all data from “Hotels” Table</p>
-            @if (@session('status'))
-                <div class="alert alert-success">{{ session('status') }}</div>
-            @endif
-            <a class="btn btn-warning" data-toggle="modal" href="#disclaimer">Disclaimer</a>
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        {{-- <th>ID</th> --}}
-                        <th>Name</th>
-                        <th>Image</th>
-                        <th>Logo</th>
-                        <th>List Product</th>
-                        <th>Address</th>
-                        <th>Hotel Type</th>
-                        <th>City</th>
-                        <th>Detail</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($hotels as $hotel)
-                        <tr>
-                            {{-- <td>{{ $hotel->id }}</td> --}}
-                            {{-- <td><img src="{{ $hotel->image }}" alt=""></td> --}}
-                            <td>{{ $hotel->name }}</td>
-                            <td>
-                                {{-- <img src="{{ asset('images/' . $hotel->image) }}" alt=""> --}}
-
-                                <img height='100px' src="{{ asset('images/' . $hotel->image) }}" /><br>
-                                <a href="{{ url('hotel/uploadPhoto/' . $hotel->id) }}">
-                                    <button class='btn btn-xs btn-default'>upload</button></a>
-                            </td>
-                            <td>
-                                <img height='100px' src="{{ asset('logo/' . $hotel->id . '.jpg') }}" /><br>
-                                <a href="{{ url('hotel/uploadLogo/' . $hotel->id) }}">
-                                    <button class='btn btn-xs btn-default'>upload</button></a>
-                            </td>
+        <!-- DataTales Example -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">DataTables </h6>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Name</th>
+                                <th>List Product</th>
+                                <th>Address</th>
+                                <th>Hotel Type</th>
+                                <th>City</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>Image</th>
+                                <th>Name</th>
+                                <th>List Product</th>
+                                <th>Address</th>
+                                <th>Hotel Type</th>
+                                <th>City</th>
+                                <th>Action</th>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            @foreach ($hotels as $hotel)
+                                <tr>
+                                    <td>
+                                        <img height="100px" src="{{ asset('images/' . $hotel->image) }}" /><br>
+                                        <a href="{{ url('hotel/uploadPhoto/' . $hotel->id) }}">
+                                            <button class="btn btn-xs btn-default">Upload</button>
+                                        </a>
+                                    </td>
+                                    <td>{{ $hotel->name }}</td>
 
 
-                            <td>
-                                @foreach ($hotel->products as $p)
-                                    <ul>
-                                        <li>{{ $p->name }}</li>
-                                    </ul>
-                                @endforeach
-                                <a class='btn btn-xs btn-info' data-toggle='modal' data-target='#myModal'
-                                    onclick='showProducts({{ $hotel->id }})'>Detail</a>
-                            </td>
-
-                            <td>{{ $hotel->address }}</td>
-                            <td>{{ $hotel->type }}</td>
-                            <td>{{ $hotel->city }}</td>
-
-
-                            {{-- toggle button detail --}}
-                            <td>
-                                <a class="btn btn-info" href="#detail_{{ $hotel->id }}"
-                                    data-toggle="modal">{{ $hotel->name }}</a>
-
-                                <div class="modal fade" id="detail_{{ $hotel->id }}" tabindex="-1" role="basic"
-                                    aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h4 class="modal-title">{{ $hotel->name }}</h4>
-                                            </div>
-                                            <div class="modal-body">
-                                                <img src="{{ asset('images/' . $hotel->image) }}" height='200px' />
-                                                <p>ALAMAT: {{ $hotel->address }}</p>
-                                                <p>TIPE HOTEL: {{ $hotel->type }}</p>
-                                                <p>CITY: {{ $hotel->city }}</p>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-default"
-                                                    data-dismiss="modal">Close</button>
+                                    <td>
+                                        @foreach ($hotel->products as $p)
+                                            <ul>
+                                                <li>{{ $p->name }}</li>
+                                            </ul>
+                                        @endforeach
+                                        <a class="btn btn-xs btn-info" data-toggle="modal" data-target="#myModal"
+                                            onclick="showProducts({{ $hotel->id }})">Detail</a>
+                                    </td>
+                                    <td>{{ $hotel->address }}</td>
+                                    <td>{{ $hotel->type }}</td>
+                                    <td>{{ $hotel->city }}</td>
+                                    <td>
+                                        <a class="btn btn-info" href="#detail_{{ $hotel->id }}"
+                                            data-toggle="modal">Detail</a>
+                                        <div class="modal fade" id="detail_{{ $hotel->id }}" tabindex="-1"
+                                            role="basic" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title">{{ $hotel->name }}</h4>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <img src="{{ asset('images/' . $hotel->image) }}" height="200px" />
+                                                        <p>Address: {{ $hotel->address }}</p>
+                                                        <p>Type: {{ $hotel->type }}</p>
+                                                        <p>City: {{ $hotel->city }}</p>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-default"
+                                                            data-dismiss="modal">Close</button>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
-                            </td>
-                            {{-- <td>
-                                @if ($hotel->typeWithTrashed)
-                                    {{ $hotel->typeWithTrashed->name }}
-                                @endif
-                            </td> --}}
-                            <td>
-                                <a class="btn btn-danger" href="#detail_{{ $hotel->id }}" data-toggle="modal">delete</a>
-                            </td>
 
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-
-    </body>
-
-    </html>
-
-    <div class="modal fade" id="disclaimer" tabindex="-1" role="basic" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                    <h4 class="modal-title">DISCLAIMER</h4>
-                </div>
-                <div class="modal-body">
-                    Pictures shown are for illustration purpose only. Actual product may vary due to product enhancement.
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                        <form method="POST" action="{{ route('hotel.destroy', $hotel->id) }}"
+                                            style="display:inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <input type="submit" value="Delete" class="btn btn-danger"
+                                                onclick="return confirm('Are you sure to delete {{ $hotel->id }} - {{ $hotel->name }} ? ');">
+                                        </form>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
-
 
     <div class="modal fade" id="myModal" tabindex="-1" role="basic" aria-hidden="true">
         <div class="modal-dialog modal-wide">

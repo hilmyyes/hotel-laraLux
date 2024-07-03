@@ -12,7 +12,10 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        $customers = User::where('role', 'guest')->orderBy('name')->get();
+        $customers = User::where('role', 'guest')
+            ->orderBy('name', 'asc')
+            ->orderBy('points', 'asc')
+            ->get();
 
         return view('customer.index', ['customers' => $customers]);
     }
@@ -69,7 +72,7 @@ class CustomerController extends Controller
     {
         $updatedData = $customer;
         $updatedData->name = $request->name;
-        $updatedData->address = $request->address;
+        $updatedData->points = $request->points;
         $updatedData->save();
         return redirect()->route('customer.index')->with('status', 'Horray ! Your data is successfully updated !');
     }

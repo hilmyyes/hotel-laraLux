@@ -1,0 +1,46 @@
+@extends('layout.conquer')
+
+@section('content')
+    <div class="container">
+        <h2>Welcome Page</h2>
+        <p>this all data from Customer table</p>
+
+        {{-- <a class="btn btn-success" href="{{ route('customer.create') }}">+ new Customer</a> --}}
+
+        @if (@session('status'))
+            <div class="alert alert-success">{{ session('status') }}</div>
+        @endif
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    {{-- <th>#</th> --}}
+                    <th>Name</th>
+                    <th>Points</th>
+                    <th>Creted</th>
+                    <th>Updated</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($customers as $d)
+                    <tr id="tr_{{ $d->id }}">
+                        {{-- <td>{{ $d->id }}</td> --}}
+                        <td>{{ $d->name }}</td>
+                        <td>{{ $d->points }}</td>
+                        <td>{{ $d->created_at }}</td>
+                        <td>{{ $d->updated_at }}</td>
+                        <td>
+                            {{-- <a class="btn btn-warning" href="{{ route('customer.edit', $d->id) }}">Edit</a> --}}
+                            <form method="POST" action="{{ route('customer.destroy', $d->id) }}" style="display:inline;">
+                                @csrf
+                                @method('DELETE')
+                                <input type="submit" value="delete" class="btn btn-danger"
+                                    onclick="return confirm('Are you sure to delete {{ $d->id }} - {{ $d->name }} ? ');">
+                            </form>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+@endsection

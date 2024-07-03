@@ -1,147 +1,142 @@
-@extends('layout.conquer')
+@extends('layouts.admin')
 
 @section('content')
-    <div class="container">
-        <h1><b>TRANSACTION</b></h1>
+    <div class="container-fluid">
 
-        <div style="display: flex; align-items: center; padding: 10px;">
-            <div>
-                <label>Employee Name:</label>
-                <input type="text" id="employeeName" value="{{ Auth::user()->name }}" readonly
-                    style="background-color: #c3c9cd; border: 1px solid #ccc;">
-            </div>
-            <div>
-                <labe>Date:</labe>
-                <input type="text" id="date" value="{{ Auth::user()->created_at }}" readonly
-                    style="background-color: #c3c9cd; border: 1px solid #ccc;">
-            </div>
-        </div>
-
-
-        <a class="btn btn-success" href="{{ route('transaction.create') }}">+ new transaction</a>
-        {{-- <a href="#modalCreate" data-toggle="modal" class="btn btn-info">+ New Type (with Modals)</a> --}}
+        <!-- Page Heading -->
+        <h1 class="h3 mb-2 text-gray-800">TRANSACTION</h1>
         @if (@session('status'))
             <div class="alert alert-success">{{ session('status') }}</div>
         @endif
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Tanggal Transaction</th>
-                    <th>Customer</th>
-                    <th>Hotel</th>
-                    <th>Produk</th>
-                    <th>Tanggal check_in</th>
-                    <th>Durasi</th>
-                    <th>Total Harga</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($transaction as $d)
-                    <tr id="tr_{{ $d->id }}">
-                        <td>{{ $d->id }}</td>
-                        <td>{{ $d->created_at }}</td>
-                        <td>{{ $d->user->name }}</td>
-                        <td>
-                            <ul>
-                                @foreach ($d->products as $product)
-                                    <li>
-                                        {{ $product->hotel->name }}
-                                    </li>
-                                @endforeach
-                            </ul>
-
-                        </td>
-                        <td>
-                            <ul>
-                                @foreach ($d->products as $product)
-                                    <li>
-                                        {{ $product->name }}
-                                    </li>
-                                @endforeach
-                            </ul>
-                        </td>
-                        <td>
-                            <ul>
-                                @foreach ($d->products as $product)
-                                    <li>
-                                        {{ $product->pivot->checkin_date }}
-                                    </li>
-                                @endforeach
-                            </ul>
-                        </td>
-                        <td>
-                            <ul>
-                                @foreach ($d->products as $product)
-                                    <li>
-                                        {{ $product->pivot->duration }}
-                                    </li>
-                                @endforeach
-                            </ul>
-
-                        </td>
-                        <td>
-                            <ul>
-                                @foreach ($d->products as $product)
-                                    <li>
-                                        IDR.
-                                        {{ number_format($product->pivot->subtotal, 2, ',', '.') }}
-                                    </li>
-                                @endforeach
-                            </ul>
-                            <hr>
-                            <strong>IDR. {{ number_format($d->total_price, 2, ',', '.') }}</strong>
-
-                        </td>
-
-                        <td>
-                            {{-- <a class="btn btn-success" data-toggle="modal" href="#myModal"
-                                onclick="getDetailData({{ $d->id }})"> Rincian Pembelian</a> --}}
-                            <a class="btn btn-warning" href="{{ route('transaction.edit', $d->id) }}">Edit</a>
-                            {{-- <a href="#modalEditA" class="btn btn-warning
-                            " data-toggle="modal"
-                                onclick="getEditForm({{ $d->id }})">Edit</a> --}}
-                            {{-- <a href="#" value="DeleteNoReload" class="btn btn-danger"
-                                onclick="if(confirm('Are you sure to delete {{ $d->id }} - {{ $d->name }} ? ')) deleteDataRemoveTR({{ $d->id }})">Delete
-                                without Reload</a> --}}
-                            <form method="POST" action="{{ route('transaction.destroy', $d->id) }}"
-                                style="display:inline;">
-                                @csrf
-                                @method('DELETE')
-                                <input type="submit" value="delete" class="btn btn-danger"
-                                    onclick="return confirm('Are you sure to delete {{ $d->id }} - {{ $d->name }} ? ');">
-                            </form>
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
-    <!-- Detail Modal -->
-    <div class="modal fade" id="myModal" tabindex="-1" role="basic" aria-hidden="true">
-        <div class="modal-dialog modal-wide">
-            <div class="modal-content" id="msg">
-                <img src="https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif" alt="Loading..."
-                    style="width: 100px;">
-                <p>Loading...</p>
+        <a class="btn btn-success" href="{{ route('transaction.create') }}">+ new Transaction</a>
+        <!-- DataTales Example -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">DataTables </h6>
             </div>
-        </div>
-    </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>Tanggal Transaction</th>
+                                <th>Customer</th>
+                                <th>Hotel</th>
+                                <th>Produk</th>
+                                <th>Tanggal check_in</th>
+                                <th>Durasi</th>
+                                <th>Total Harga</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>Tanggal Transaction</th>
+                                <th>Customer</th>
+                                <th>Hotel</th>
+                                <th>Produk</th>
+                                <th>Tanggal check_in</th>
+                                <th>Durasi</th>
+                                <th>Total Harga</th>
+                                <th>Action</th>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            @foreach ($transaction as $d)
+                                <tr id="tr_{{ $d->id }}">
+                                    {{-- <td>{{ $d->id }}</td> --}}
+                                    <td>{{ $d->created_at }}</td>
+                                    <td>
+                                        @if ($d->user)
+                                            {{ $d->user->name }}
+                                        @else
+                                            <span class="text-danger">Pengguna tidak ditemukan untuk ID
+                                                transaksi:
+                                                {{ $d->id }}</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        <ul>
+                                            @foreach ($d->products as $product)
+                                                <li>
+                                                    {{ $product->hotel->name }}
+                                                </li>
+                                            @endforeach
+                                        </ul>
 
-    <!-- Edit Modal A -->
-    <div class="modal fade" id="modalEditA" tabindex="-1" role="basic" aria-hidden="true">
-        <div class="modal-dialog modal-wide">
-            <div class="modal-content">
-                <div class="modal-body" id="modalContent">
-                    <img src="https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif" alt="Loading..."
-                        style="width: 100px;">
-                    <p>Loading...</p>
+                                    </td>
+                                    <td>
+                                        <ul>
+                                            @foreach ($d->products as $product)
+                                                <li>
+                                                    {{ $product->name }}
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        <ul>
+                                            @foreach ($d->products as $product)
+                                                <li>
+                                                    {{ $product->pivot->checkin_date }}
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        <ul>
+                                            @foreach ($d->products as $product)
+                                                <li>
+                                                    {{ $product->pivot->duration }}
+                                                </li>
+                                            @endforeach
+                                        </ul>
+
+                                    </td>
+                                    <td>
+                                        <ul>
+                                            @foreach ($d->products as $product)
+                                                <li>
+                                                    IDR.
+                                                    {{ number_format($product->pivot->subtotal, 2, ',', '.') }}
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                        <hr>
+                                        <strong>IDR.
+                                            {{ number_format($d->total_price, 2, ',', '.') }}</strong>
+
+                                    </td>
+
+                                    <td>
+                                        {{-- <a class="btn btn-success" data-toggle="modal" href="#myModal"
+                                                    onclick="getDetailData({{ $d->id }})"> Rincian Pembelian</a> --}}
+                                        <a class="btn btn-warning" href="{{ route('transaction.edit', $d->id) }}">Edit</a>
+                                        {{-- <a href="#modalEditA" class="btn btn-warning
+                                                " data-toggle="modal"
+                                                    onclick="getEditForm({{ $d->id }})">Edit</a> --}}
+                                        {{-- <a href="#" value="DeleteNoReload" class="btn btn-danger"
+                                                    onclick="if(confirm('Are you sure to delete {{ $d->id }} - {{ $d->name }} ? ')) deleteDataRemoveTR({{ $d->id }})">Delete
+                                                    without Reload</a> --}}
+                                        <form method="POST" action="{{ route('transaction.destroy', $d->id) }}"
+                                            style="display:inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <input type="submit" value="delete" class="btn btn-danger"
+                                                onclick="return confirm('Are you sure to delete {{ $d->id }} - {{ $d->name }} ? ');">
+                                        </form>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
 @endsection
+
 
 @section('javascript')
     <script>

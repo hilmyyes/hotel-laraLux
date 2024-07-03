@@ -95,9 +95,19 @@ class HotelController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Hotel $hotel)
     {
-        //
+        dd($hotel);
+        try {
+            $deletedData = $hotel;
+            //dd($deletedData);
+            $deletedData->delete();
+            return redirect()->route('hotel.index')->with('status', 'Horray ! Your data is successfully deleted !');
+        } catch (\PDOException $ex) {
+
+            $msg = "Failed to delete data ! Make sure there is no related data before deleting it";
+            return redirect()->route('customer.index')->with('status', $msg);
+        }
     }
 
 

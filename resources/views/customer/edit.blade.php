@@ -1,4 +1,4 @@
-@extends('layout.conquer')
+@extends('layouts.admin')
 
 @section('content')
     <form method="POST" action="{{ route('customer.update', $data->id) }}">
@@ -8,13 +8,13 @@
         <div class="form-group">
             <label for="name">Name of Customer</label>
             <input type="text" name="name" class="form-control" id="nameCategory" aria-describedby="nameHelp"
-                placeholder="Enter name of Customer"value="{{ $data->name }}">
+                placeholder="Enter name of Customer"value="{{ $data->name }}" readonly>
             <small id="nameHelp" class="form-text text-muted">Please write down your data here</small>
         </div>
         <div class="form-group">
-            <label for="name">Address of Customer</label>
-            <input type="text" name="address" class="form-control" id="nameCategory" aria-describedby="nameHelp"
-                placeholder="Enter address of Customer"value="{{ $data->address }}">
+            <label for="name">Points of Customer</label>
+            <input type="text" name="points" class="form-control" id="nameCategory" aria-describedby="nameHelp"
+                placeholder="Enter points of Customer"value="{{ $data->points }}">
             <small id="nameHelp" class="form-text text-muted">Please write down your data here</small>
         </div>
         <a class="btn btn-info" href="{{ route('customer.index') }}">Cancel</a>

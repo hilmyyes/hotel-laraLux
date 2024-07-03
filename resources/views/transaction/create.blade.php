@@ -1,4 +1,4 @@
-@extends('layout.conquer')
+@extends('layouts.admin')
 
 @section('content')
     <form method="POST" action="{{ route('transaction.store') }}">
@@ -50,11 +50,10 @@
                         readonly>
                 </div>
                 <button type="button" class="btn btn-danger btn-sm delete-product">Delete Product</button>
+                <br>
             </div>
         </div>
-
         <button type="button" class="btn btn-success mb-3" id="add-product">Add Product</button>
-
         <a class="btn btn-info" href="{{ route('transaction.index') }}">Cancel</a>
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>

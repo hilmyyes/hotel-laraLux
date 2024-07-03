@@ -1,4 +1,4 @@
-@extends('layout.conquer')
+@extends('layouts.admin')
 @section('content')
     <div class="page-content">
         <h3 class="page-title">Upload Logo untuk hotel {{ $hotel->name }}</h3>

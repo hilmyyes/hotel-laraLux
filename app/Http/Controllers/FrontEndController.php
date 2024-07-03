@@ -20,7 +20,8 @@ class FrontEndController extends Controller
         return view('frontend.index', compact('products'));
     }
 
-    public function hotel($id){
+    public function hotel($id)
+    {
         $hotel = Hotel::find($id);
         $products = Product::where('hotel_id', $id)->get();
         return view('frontend.hotel', compact('hotel', 'products'));

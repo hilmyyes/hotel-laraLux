@@ -73,7 +73,7 @@ class ProductController extends Controller
         $data->hotel_id = $request->get('hotel');
         $data->save();
 
-        
+
         $data->facilities()->attach($request->get('facilities'));
 
         return redirect('product')->with('status', 'Berhasil Tambah');
@@ -94,19 +94,22 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        //dd($product);
         // Ambil nama hotel dari id hotel_id yang ada di tabel product
         $hotel = Hotel::find($product->hotel_id);
 
         // Ambil semua data hotels untuk dropdown atau keperluan lainnya
         $datas = Hotel::orderBy('name')->get();
 
+        // Ambil semua fasilitas untuk dropdown
+        $facilities = Facilities::orderBy('name')->get();
+
         // Ambil data produk yang sedang diedit
         $data = $product;
 
         // Mengembalikan view dengan data yang dibutuhkan
-        return view('product.edit', compact('data', 'datas', 'hotel'));
+        return view('product.edit', compact('data', 'datas', 'hotel', 'facilities'));
     }
+
 
 
     /**
@@ -114,15 +117,19 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        $updatedData = $product;
-        $updatedData->name = $request->name;
-        $updatedData->price = $request->price;
-        $updatedData->image = $request->image;
-        $updatedData->description = $request->desc;
-        $updatedData->available_room = $request->room;
-        $updatedData->hotel_id = $request->hotel;
-        $updatedData->save();
-        return redirect()->route('product.index')->with('status', 'Horray ! Your data is successfully updated !');
+
+        $product->name = $request->name;
+        $product->price = $request->price;
+        $product->image = $request->image;
+        $product->description = $request->desc;
+        $product->available_room = $request->room;
+        $product->hotel_id = $request->hotel;
+        $product->save();
+
+
+        $product->facilities()->sync($request->facilities);
+
+        return redirect()->route('product.index')->with('status', 'Your data has been successfully updated!');
     }
 
     /**
