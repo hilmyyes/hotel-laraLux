@@ -9,9 +9,9 @@
                             <div class="col-md-5">
                                 <div class="slider-nav-img">
                                     @if ($product->image == null)
-                                        <img width="300" src="{{ asset('images/blank.jpg') }}">
+                                        <img height="300" src="{{ asset('images/blank.jpg') }}">
                                     @else
-                                        <img width="300" src="{{ asset('images/' . $product->image) }}"
+                                        <img height="300" src="{{ asset('images/' . $product->image) }}"
                                             alt="Product Image">
                                     @endif
                                 </div>
@@ -33,7 +33,7 @@
                                         <p>{{ 'Rp ' . number_format($product->price, 2) }}</p>
                                     </div>
                                     <div><strong><a
-                                                href="{{ route('laralux.hotel', $product->hotel_id) }}">{{ $hotel->name }}</a></strong>
+                                                href="{{ route('laralux.hotel', $product->hotel_id) }}"><i>Link to Hotel {{ $hotel->name }}</i></a></strong>
                                     </div><br>
                                     <div>
                                         <strong>Facilities:</strong>
@@ -51,7 +51,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div><br>
                         <div>
                             <h5>ROOMS ALSO FROM {{ $hotel->name }}:</h5><br>
                         </div>
@@ -70,13 +70,11 @@
                                             </div>
                                         </div>
                                         <div class="product-image">
-                                            <a href="product-detail.html">
-                                                @if ($p->image == null)
-                                                    <img src="{{ asset('images/blank.jpg') }}">
-                                                @else
-                                                    <img src="{{ asset('images/' . $p->image) }}" alt="Product Image">
-                                                @endif
-                                            </a>
+                                            @if ($p->image == null)
+                                                <img src="{{ asset('images/blank.jpg') }}">
+                                            @else
+                                                <img src="{{ asset('images/' . $p->image) }}" alt="Product Image">
+                                            @endif
                                             <div class="product-action">
                                                 <a href="{{ route('laralux.show', $p->id) }}"><i
                                                         class="fa fa-search"></i></a>
