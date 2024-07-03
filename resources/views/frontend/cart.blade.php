@@ -15,7 +15,7 @@
                 <div class="table-responsive">
                     @php
                         $total = 0;
-                        $points = 0;
+                        $pointsSession = 0;
                     @endphp
 
                     <table class="table table-bordered">
@@ -47,7 +47,7 @@
                                         <td>
                                             <p>{{ $item['name'] }}</p>
                                         </td>
-                                        <td>{{ 'Rp ' . $item['price'] }}</td>
+                                        <td>{{ 'Rp ' . number_format($item['price'], 2) }}</td>
 
                                         <td>
                                             <input type="text" name="daterange_{{ $item['id'] }}"
@@ -56,20 +56,20 @@
 
                                         </td>
 
-                                        <td>{{ 'Rp ' . $item['duration'] * $item['price'] }}</td>
+                                        <td>{{ 'Rp ' . number_format($item['duration'] * $item['price'], 2) }}</td>
                                         <td><a class="btn btn-xs full-width-button"
                                                 href="{{ route('delFromCart', $item['id']) }}"><i
                                                     class="fa fa-trash"></i></a></td>
                                     </tr>
                                     @php
                                         $total += $item['duration'] * $item['price'];
-                                        $points = session('points', 0);
+                                        $pointsSession = session('points', 0);
                                     @endphp
                                 @endforeach
                                 <tr>
                                     <td colspan="6">
                                         <a class="btn btn-xs full-width-button"
-                                            href="{{ route('laralux.deleteAllCart') }}">Delete All Cart</a>
+                                            href="{{ route('laralux.deleteAllCart') }}">Delete All Cart</i></a>
                                     </td>
                                 </tr>
                             @else
@@ -88,10 +88,11 @@
             <div class="cart-page-inner">
                 <div class="row">
                     <div class="col-md-12">
+                        <strong>Points available: {{ Auth::user()->points }}</strong>
                         <div class="coupon">
-                            <strong>Points Redeemed:</strong>
+                            <strong>Redeem Points:</strong>
                             <input type="number" min="0" max="{{ Auth::user()->points }}"
-                                value="{{ $points }}" name="points" id="points" onchange="updatePoints()">
+                                value="{{ session('points', 0) }}" name="points" id="points" onchange="updatePoints()">
                         </div>
                     </div><br><br>
                     <div class="col-md-12">
@@ -104,28 +105,29 @@
                                     <tr>
                                         <th scope="row">Total Rooms Cost (exc. Tax)</th>
                                         <td>
-                                            <p>{{ 'Rp ' . number_format($total - $points * 100000, 2) }}</p>
+                                            <p>{{ 'Rp ' . number_format($total - $pointsSession * 100000, 2) }}</p>
                                         </td>
                                     </tr>
 
-                                    @if ($points > 0)
+                                    @if ($pointsSession > 0)
                                         <tr>
                                             <th scope="row">Total Redeemed</th>
-                                            <td id="pointsValue">{{ '-' . number_format($points * 100000, 2) }}</td>
+                                            <td id="pointsValue">{{ '-' . number_format($pointsSession * 100000, 2) }}</td>
                                         </tr>
                                     @endif
 
                                     <tr>
                                         <th scope="row">Tax (11%)</th>
                                         <td>
-                                            <p>{{ 'Rp ' . number_format((($total - $points * 100000) * 11) / 100, 2) }}</p>
+                                            <p>{{ 'Rp ' . number_format((($total - $pointsSession * 100000) * 11) / 100, 2) }}
+                                            </p>
                                         </td>
                                     </tr>
                                     <tr>
                                         <th scope="row">Points Earned:</th>
                                         <td>
                                             <p>
-                                                {{ '+ ' . number_format(($total - $points * 100000) / 300000) }}
+                                                {{ '+ ' . number_format(($total - $pointsSession * 100000) / 300000) }}
                                             </p>
                                         </td>
                                     </tr>
@@ -133,7 +135,7 @@
                                         <th scope="row">Due Amount</th>
                                         <td>
                                             <p>
-                                                <b>{{ 'Rp ' . number_format($total - $points * 100000 + (($total - $points * 100000) * 11) / 100, 2) }}</b>
+                                                <b>{{ 'Rp ' . number_format($total - $pointsSession * 100000 + (($total - $pointsSession * 100000) * 11) / 100, 2) }}</b>
                                             </p>
                                         </td>
                                     </tr>

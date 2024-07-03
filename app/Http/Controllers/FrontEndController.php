@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Hotel;
 use App\Models\Product;
 use App\Models\ProductTransaction;
 use App\Models\Transaction;
@@ -19,11 +20,21 @@ class FrontEndController extends Controller
         return view('frontend.index', compact('products'));
     }
 
+    public function hotel($id){
+        $hotel = Hotel::find($id);
+        $products = Product::where('hotel_id', $id)->get();
+        return view('frontend.hotel', compact('hotel', 'products'));
+    }
+
     public function show($id)
     {
-        //
         $product = Product::find($id);
-        return view('frontend.product-detail', compact('product'));
+        $hotel = Hotel::find($product->hotel_id);
+        $productFacilities = $product->facilities()->get();
+        $productSimilar = Product::where('hotel_id', $hotel->id)
+            ->where('id', '!=', $id)
+            ->get();
+        return view('frontend.product-detail', compact('product', 'productFacilities', 'hotel', 'productSimilar'));
     }
 
     public function cart()
@@ -53,6 +64,28 @@ class FrontEndController extends Controller
         return redirect()->back()->with("status", "Produk Telah ditambahkan ke Cart");
     }
 
+    public function shop($id)
+    {
+        $product = Product::find($id);
+        $cart = session()->get('cart');
+        if (!isset($cart[$id])) {
+            $cart[$id] = [
+                'id' => $id,
+                'name' => $product->name,
+                'description' => $product->description,
+                'checkin_date' => now()->format('d-m-Y'),
+                'duration' => 1,
+                'price' => $product->price,
+                'photo' => $product->image,
+            ];
+        } else {
+            $cart[$id]['duration']++;
+        }
+
+        session()->put('cart', $cart);
+        return view('frontend.cart');
+    }
+
     public function changeQuantity(Request $request)
     {
         $id = $request->id;
@@ -76,14 +109,15 @@ class FrontEndController extends Controller
         $id = $request->id;
         $checkin_date = $request->checkin_date;
         $duration = $request->duration;
+        $total = $request->total;
         $cart = session()->get('cart');
+
+        session()->put('points', 0);
 
         if (isset($cart[$id])) {
             $cart[$id]['checkin_date'] = $checkin_date;
             $cart[$id]['duration'] = $duration;
         }
-
-        session()->put('points', 0);
 
         session()->put('cart', $cart);
         return response()->json(['status' => 'Check-in date updated successfully']);
@@ -93,19 +127,28 @@ class FrontEndController extends Controller
     {
         $points = $request->points;
         $total = $request->total;
-        if (($points * 100000) > $total) {
-            $newPoints = floor($total / 100000);
-            session()->put('points', $newPoints);
-        } else {
-            session()->put('points', $points);
+        $availablePoints = Auth::user()->points;
+
+        if ($points == "") {
+            $points = 0;
         }
 
-        return response()->json(['status' => 'Points updated successfully with value: ' . $points]);
-    }
+        if ($points > $availablePoints) {
+            $points = $availablePoints;
+        }
 
+        if (($points * 100000) > $total) {
+            $points = floor($total / 100000);
+        }
+
+        session()->put('points', $points);
+
+        return response()->json(['status' => 'Points updated successfully', 'points' => $points]);
+    }
 
     public function deleteFromCart($id)
     {
+        session()->put('points', 0);
         $cart = session()->get('cart');
         if (isset($cart[$id])) {
             unset($cart[$id]);

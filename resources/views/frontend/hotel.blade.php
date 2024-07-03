@@ -5,14 +5,29 @@
 
         <div class="container-fluid">
             <strong>
-                <h1>ALL ROOMS</h1>
+                <h1>{{ $hotel->name }}</h1>
             </strong>
             <div class="row">
                 <div class="col-lg-8">
                     <div class="row">
                         <div class="col-md-12">
                             <div class="product-view-top">
+                                <div class="product-content">
+                                    <div class="ratting">
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                    </div>
+                                    <h5><i>{{ $hotel->address . ', ' . $hotel->city }}</i></h5><br>
+
+                                </div>
+                                <div>
+                                    <h5>ROOMS FROM {{ $hotel->name }}:</h5><br>
+                                </div>
                                 <div class="row">
+
                                     @foreach ($products as $p)
                                         <div class="col-md-4">
                                             <div class="product-item">
