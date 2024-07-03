@@ -8,7 +8,11 @@
         @if (@session('status'))
             <div class="alert alert-success">{{ session('status') }}</div>
         @endif
-        <a class="btn btn-success" href="{{ route('transaction.create') }}">+ new Transaction</a>
+
+        @if (Auth::user()->role == 'owner')
+            <a class="btn btn-success" href="{{ route('transaction.create') }}">+ new Transaction</a>
+        @endif
+
         <!-- DataTales Example -->
         <div class="card shadow mb-4">
             <div class="card-header py-3">
@@ -29,7 +33,7 @@
                                 <th>Action</th>
                             </tr>
                         </thead>
-                        <tfoot>
+                        {{-- <tfoot>
                             <tr>
                                 <th>Tanggal Transaction</th>
                                 <th>Customer</th>
@@ -40,7 +44,7 @@
                                 <th>Total Harga</th>
                                 <th>Action</th>
                             </tr>
-                        </tfoot>
+                        </tfoot> --}}
                         <tbody>
                             @foreach ($transaction as $d)
                                 <tr id="tr_{{ $d->id }}">
@@ -111,20 +115,28 @@
                                     <td>
                                         {{-- <a class="btn btn-success" data-toggle="modal" href="#myModal"
                                                     onclick="getDetailData({{ $d->id }})"> Rincian Pembelian</a> --}}
-                                        <a class="btn btn-warning" href="{{ route('transaction.edit', $d->id) }}">Edit</a>
+
+                                        @if (Auth::user()->role == 'owner')
+
+                                            <a class="btn btn-warning"
+                                                href="{{ route('transaction.edit', $d->id) }}">Edit</a>
+                                        @endif
                                         {{-- <a href="#modalEditA" class="btn btn-warning
                                                 " data-toggle="modal"
                                                     onclick="getEditForm({{ $d->id }})">Edit</a> --}}
                                         {{-- <a href="#" value="DeleteNoReload" class="btn btn-danger"
                                                     onclick="if(confirm('Are you sure to delete {{ $d->id }} - {{ $d->name }} ? ')) deleteDataRemoveTR({{ $d->id }})">Delete
                                                     without Reload</a> --}}
-                                        <form method="POST" action="{{ route('transaction.destroy', $d->id) }}"
-                                            style="display:inline;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <input type="submit" value="delete" class="btn btn-danger"
-                                                onclick="return confirm('Are you sure to delete {{ $d->id }} - {{ $d->name }} ? ');">
-                                        </form>
+                                        @if (Auth::user()->role == 'owner')
+
+                                            <form method="POST" action="{{ route('transaction.destroy', $d->id) }}"
+                                                style="display:inline;">
+                                                @csrf
+                                                @method('DELETE')
+                                                <input type="submit" value="delete" class="btn btn-danger"
+                                                    onclick="return confirm('Are you sure to delete {{ $d->id }} - {{ $d->name }} ? ');">
+                                            </form>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach

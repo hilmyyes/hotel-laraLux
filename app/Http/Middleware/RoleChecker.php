@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class RoleChecker
 {
-    public function handle(Request $request, Closure $next, string $roles):Response
+    public function handle(Request $request, Closure $next):Response
     {
         // Check if user is authenticated
         if (!$request->user()) {
@@ -16,11 +16,15 @@ class RoleChecker
         }
 
         // Check if user has one of the allowed roles
-        if (auth()->user()->role!=$roles) {
-            abort(403);
-            // return redirect()->route('home')->with('error', 'Unauthorized access');
-        }
+        // if (auth()->user()->role!=$roles) {
+        //     return redirect()->route('home')->with('error', 'Unauthorized access');
+        // }
 
+
+        if ($request->user() && $request->user()->role != 'owner' && $request->user()->role != 'employee') {
+            return redirect()->route('home')->with('error', 'Unauthorized access');
+        }
+        
         return $next($request);
     }
 }

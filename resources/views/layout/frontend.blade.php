@@ -52,15 +52,35 @@
                                 </div>
                             </div> --}}
                     </div>
+                    @if (Auth::user())
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle"
+                            data-toggle="dropdown">{{ Auth::user()->name }}
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="{{ route('logout') }}"
+                                onclick="event.preventDefault();
+                                                             document.getElementById('logout-form').submit();">
+                                {{ __('Logout') }}
+                            </a>
+
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                @csrf
+                            </form>
+                        </div>
+                    </div>
+                    @else
                     <div class="navbar-nav ml-auto">
                         <div class="nav-item dropdown">
-                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">User Account</a>
+                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">User
+                                Account</a>
                             <div class="dropdown-menu">
-                                <a href="#" class="dropdown-item">Login</a>
-                                <a href="#" class="dropdown-item">Register</a>
+                                <a href="/login" class="dropdown-item">Login</a>
+                                <a href="/register" class="dropdown-item">Register</a>
                             </div>
                         </div>
                     </div>
+                @endif
                 </div>
             </nav>
         </div>
@@ -73,23 +93,19 @@
             <div class="row align-items-center">
                 <div class="col-md-3">
                     <div class="logo">
-                        <a href="{{ route('laralux.index') }}">
-                            <img src="{{ asset('frontend/img/logo.png') }}" alt="Logo">
+                        <a href="{{ route('welcome') }}">
+                            <h1>LaraLux</h1>
                         </a>
                     </div>
                 </div>
-                <div class="col-md-6">
+                {{-- <div class="col-md-6">
                     <div class="search">
                         <input type="text" placeholder="Search">
                         <button><i class="fa fa-search"></i></button>
                     </div>
-                </div>
-                <div class="col-md-3">
+                </div> --}}
+                <div class="navbar-nav ml-auto">
                     <div class="user">
-                        <a href="wishlist.html" class="btn wishlist">
-                            <i class="fa fa-heart"></i>
-                            <span>(0)</span>
-                        </a>
                         <a href="{{ route('cart') }}" class="btn cart">
                             <i class="fa fa-shopping-cart"></i>
                             <span>
@@ -175,22 +191,7 @@
                 </div>
             </div>
 
-            <div class="row payment align-items-center">
-                <div class="col-md-6">
-                    <div class="payment-method">
-                        <h2>We Accept:</h2>
-                        <img src="img/payment-method.png" alt="Payment Method" />
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="payment-security">
-                        <h2>Secured By:</h2>
-                        <img src="img/godaddy.svg" alt="Payment Security" />
-                        <img src="img/norton.svg" alt="Payment Security" />
-                        <img src="img/ssl.svg" alt="Payment Security" />
-                    </div>
-                </div>
-            </div>
+        
         </div>
     </div>
     <!-- Footer End -->

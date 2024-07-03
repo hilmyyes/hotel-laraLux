@@ -26,26 +26,26 @@ use App\Http\Controllers\HotelController; // jangan lupa di use
 |
 */
 
-Route::get('/admintesting', function () {
-    return view('layouts.index');
-})->name('admintesting');
+// Route::get('/admintesting', function () {
+//     return view('layouts.index');
+// })->name('admintesting');
 
-// view only and can be guess
-Route::get('/kategori', function () {
-    return view('kategori');
-})->name('kategori');
+// // view only and can be guess
+// Route::get('/kategori', function () {
+//     return view('kategori');
+// })->name('kategori');
 
-Route::get('/kategori/single', function () {
-    return view('single');
-})->name('single');
+// Route::get('/kategori/single', function () {
+//     return view('single');
+// })->name('single');
 
-Route::get('/kategori/standard-double', function () {
-    return view('standard_double');
-})->name('double');
+// Route::get('/kategori/standard-double', function () {
+//     return view('standard_double');
+// })->name('double');
 
-Route::get('/contact', function () {
-    return view('contact');
-})->name('contact');
+// Route::get('/contact', function () {
+//     return view('contact');
+// })->name('contact');
 
 Route::get('/', function () {
     return view('welcome');
@@ -59,21 +59,37 @@ Route::get('/home', function () {
 Route::middleware(['auth'])->group(function () {
 
 
-    Route::get('/admin', function () {
-        return view('admin');
-    })->name('admin')->middleware('RoleChecker:owner');
 
-    Route::resource('hotel', HotelController::class);
+    Route::middleware(['RoleChecker:owner'])->group(function () {
+        
+        Route::get('/welcomeadmin', function () {
+            return view('layouts.welcomeadmin');
+        })->name('welcomeadmin');
+    
 
-    Route::resource('product', ProductController::class);
+        Route::resource('hotel', HotelController::class);
 
-    Route::resource('transaction', TransactionController::class);
+        Route::resource('product', ProductController::class);
+    
+        Route::resource('transaction', TransactionController::class);
+    
+        Route::resource('customer', CustomerController::class);
 
-    Route::resource('customer', CustomerController::class);
+        Route::resource('facilities', FacilitiesController::class);
+
+        Route::get('/laporan', function () {
+            return view('laporan.index');
+        })->name('laporan');
+
+    });
+
+    // Route::get('/admin', function () {
+    //     return view('admin');
+    // })->name('admin')->middleware('RoleChecker:owner');
+
+   
 
     Route::resource('cart', CartController::class);
-
-    Route::resource('facilities', FacilitiesController::class);
 
     Route::get('/laralux', [FrontEndController::class, 'index'])->name('laralux.index');
 
@@ -81,9 +97,7 @@ Route::middleware(['auth'])->group(function () {
         return view('frontend.cart');
     })->name('cart');
 
-    Route::get('/welcomeadmin', function () {
-        return view('layouts.welcomeadmin');
-    })->name('welcomeadmin');
+   
 
 
     Route::get('/laralux/{laralux}', [

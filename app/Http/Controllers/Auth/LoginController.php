@@ -41,8 +41,8 @@ class LoginController extends Controller
         // dd($user);
         if ($user->role === 'guest') {
             return redirect('/home');
-        } elseif ($user->role === 'owner' || $user->role === 'admin') {
-            return redirect('/admin');
+        } elseif ($user->role === 'owner' || $user->role === 'employee') {
+            return redirect('/welcomeadmin');
         } else {
             // Handle other roles or scenarios if needed
             return redirect($this->redirectTo);

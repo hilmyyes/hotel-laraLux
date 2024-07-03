@@ -151,6 +151,33 @@
                 </div>
             </li> --}}
 
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('transaction.index') }}">
+                    <i class="fa fa-money-bill"></i>
+                    <span>Transaction</span></a>
+            </li>
+
+
+
+                       <!-- Untuk Report/Rekap -->
+                       <li class="nav-item">
+                        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseRekap"
+                            aria-expanded="true" aria-controls="collapseRekap">
+                            <i class="fa fa-book"></i>
+                            <span>Laporan/Rekap</span>
+                        </a>
+                        <div id="collapseRekap" class="collapse" aria-labelledby="headingHotel" data-parent="#accordionSidebar">
+                            <div class="bg-white py-2 collapse-inner rounded">
+                                <h6 class="collapse-header">Laporan:</h6>
+                                <a class="collapse-item" href="{{ route('laporan') }}"> Laporan Pertama </a>
+                                <a class="collapse-item" href="{{ route('laporan') }}"> Laporan Kedua </a>
+
+                                {{-- <h6 class="collapse-header">Type of Hotel:</h6> --}}
+                            </div>
+        
+                        </div>
+                    </li>
+        
 
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
@@ -178,18 +205,7 @@
                     </button>
 
                     <!-- Topbar Search -->
-                    <form
-                        class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                        <div class="input-group">
-                            <input type="text" class="form-control bg-light border-0 small"
-                                placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
-                            <div class="input-group-append">
-                                <button class="btn btn-primary" type="button">
-                                    <i class="fas fa-search fa-sm"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </form>
+                    <h4 style="color: blue;font-weight: bold">Sistem Administrasi Laralux</h4>
 
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">

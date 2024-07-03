@@ -7,7 +7,7 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <title>Home - HotelAnsa</title>
+    <title>Home - Laralux</title>
     <meta content="" name="description">
     <meta content="" name="keywords">
 
@@ -62,9 +62,9 @@
                     <li><a href="{{ route('produk.index') }}">Produk</a></li>
                     <li><a href="{{ route('kategori') }}">Kategori</a></li>
                     <li><a href="{{ route('report') }}">Report</a></li> --}}
-                    <li><a href="#">Hotel</a></li>
-                    <li><a href="#">Produk</a></li>
-                    <li><a href="#">Kategori</a></li>
+                    <li><a href="{{ route("laralux.index") }}">Hotel</a></li>
+                    <li><a href="{{ route("laralux.index") }}">Produk</a></li>
+                    <li><a href="{{ route("laralux.index") }}">Kategori</a></li>
                     <li><a href="{{ route('laralux.index') }}">Booking</a></li>
 
                     {{-- <li><a href="{{ route('promo') }}">Promo</a></li> --}}
@@ -161,7 +161,7 @@
                 <div class="col-lg-2 col-6 footer-links">
                     <h4>Useful Links</h4>
                     <ul>
-                        <li><a href="#">Home</a></li>
+                        <li><a href="{{ route("laralux.index") }}">Home</a></li>
                         <li><a href="#">About us</a></li>
                         <li><a href="#">Services</a></li>
                         <li><a href="#">Terms of service</a></li>
