@@ -81,7 +81,6 @@ Route::middleware(['auth'])->group(function () {
         return view('frontend.cart');
     })->name('cart');
 
-
     Route::get('/welcomeadmin', function () {
         return view('layouts.welcomeadmin');
     })->name('welcomeadmin');
@@ -167,7 +166,6 @@ Route::post('product/delPhoto', [ProductController::class, 'delPhoto']);
 
 
 Route::post('facilities/getEditForm', [FacilitiesController::class, 'getEditForm'])->name('facilities.getEditForm');
-
 
 
 Route::get('/laralux', [FrontEndController::class, 'index'])->name('laralux.index');
