@@ -41,11 +41,12 @@
                 </div>
                 <div class="form-group">
                     <label for="duration">Duration</label>
-                    <input type="text" name="duration[]" class="form-control" placeholder="Enter duration of Product">
+                    <input type="text" name="duration[]" class="form-control" placeholder="Enter duration of Product"
+                        readonly>
                 </div>
                 <div class="form-group">
                     <label for="subtotal">Subtotal of Product</label>
-                    <input type="text" name="subtotal[]" class="form-control" placeholder="Enter Subtotal of Product">
+                    <input type="text" name="subtotal[]" class="form-control" placeholder="Enter Subtotal of Product" readonly>
                 </div>
                 <button type="button" class="btn btn-danger btn-sm delete-product">Delete Product</button>
             </div>
