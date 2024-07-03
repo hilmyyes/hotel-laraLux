@@ -120,14 +120,14 @@
                     @if ($cart)
                         <tr>
                             <td colspan="3"></td>
-                            <td colspan="2" class="text-left"><strong>Total Rooms Cost (tax exc.)</strong></td>
-                            <td><strong>{{ 'Rp ' . number_format($total - $points * 100000, 2) }}</strong></td>
+                            <td colspan="2" class="text-left"><strong>Total Rooms Cost (exc. Tax & Points)</strong></td>
+                            <td><strong>{{ 'Rp ' . number_format($total, 2) }}</strong></td>
                         </tr>
                         @if ($points > 0)
                             <tr>
                                 <td colspan="3"></td>
-                                <td colspan="2" class="text-left"><strong>Total Redeemed</strong></td>
-                                <td><strong>{{ '-' . number_format($points * 100000, 2) . '('.$points.' points)' }}</strong></td>
+                                <td colspan="2" class="text-left"><strong>Value Points Redeemed</strong></td>
+                                <td><strong>{{ '-' . number_format($points * 100000, 2) }}</strong></td>
                             </tr>
                         @endif
 
@@ -138,6 +138,17 @@
                             <td><strong>{{ 'Rp ' . number_format((($total - $points * 100000) * 11) / 100, 2) }}</strong>
                             </td>
                         </tr>
+
+                        @if (floor(($total - $points * 100000) / 300000) > 0)
+                        <tr>
+                            <td colspan="3"></td>
+                            <td colspan="2" class="text-left"><strong>Points Earned:</strong>
+                            </td>
+                            <td><strong>{{ '+' . floor(($total - $points * 100000) / 300000) }}</strong>
+                            </td>
+                        </tr>
+                        @endif
+
                         <tr>
                             <td colspan="3"></td>
                             <td colspan="2" class="text-left"><strong>Due Amount</strong></td>

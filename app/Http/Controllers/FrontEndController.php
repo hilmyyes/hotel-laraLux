@@ -176,7 +176,7 @@ class FrontEndController extends Controller
             return $carry + $item['duration'] * $item['price'];
         }, 0);
 
-        $pointsEarned = round(($total - $points * 100000) / 300000);
+        $pointsEarned = floor(($total - $points * 100000) / 300000);
         $customer->points += $pointsEarned;
         $customer->points -= $points;
         $customer->save();

@@ -103,15 +103,15 @@
                             <div class="customer-details">
                                 <table class="table">
                                     <tr>
-                                        <th scope="row">Total Rooms Cost (exc. Tax)</th>
+                                        <th scope="row">Total Rooms Cost (exc. Tax & Points)</th>
                                         <td>
-                                            <p>{{ 'Rp ' . number_format($total - $pointsSession * 100000, 2) }}</p>
+                                            {{ 'Rp ' . number_format($total, 2) }}
                                         </td>
                                     </tr>
 
                                     @if ($pointsSession > 0)
                                         <tr>
-                                            <th scope="row">Total Redeemed</th>
+                                            <th scope="row">Value Points Redeemed</th>
                                             <td id="pointsValue">{{ '-' . number_format($pointsSession * 100000, 2) }}</td>
                                         </tr>
                                     @endif
@@ -119,24 +119,21 @@
                                     <tr>
                                         <th scope="row">Tax (11%)</th>
                                         <td>
-                                            <p>{{ 'Rp ' . number_format((($total - $pointsSession * 100000) * 11) / 100, 2) }}
-                                            </p>
+                                            {{ 'Rp ' . number_format((($total - $pointsSession * 100000) * 11) / 100, 2) }}
                                         </td>
                                     </tr>
+                                    @if(floor(($total - $pointsSession * 100000) / 300000) > 0)
                                     <tr>
                                         <th scope="row">Points Earned:</th>
                                         <td>
-                                            <p>
-                                                {{ '+ ' . number_format(($total - $pointsSession * 100000) / 300000) }}
-                                            </p>
+                                            {{ '+' . floor(($total - $pointsSession * 100000) / 300000) }}
                                         </td>
                                     </tr>
+                                    @endif
                                     <tr>
                                         <th scope="row">Due Amount</th>
                                         <td>
-                                            <p>
-                                                <b>{{ 'Rp ' . number_format($total - $pointsSession * 100000 + (($total - $pointsSession * 100000) * 11) / 100, 2) }}</b>
-                                            </p>
+                                            <b>{{ 'Rp ' . number_format($total - $pointsSession * 100000 + (($total - $pointsSession * 100000) * 11) / 100, 2) }}</b>
                                         </td>
                                     </tr>
                                 </table>
