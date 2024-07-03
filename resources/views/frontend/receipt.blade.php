@@ -120,26 +120,30 @@
                         <tr>
                             <td colspan="3"></td>
                             <td colspan="2" class="text-left"><strong>Total Rooms Cost (tax exc.)</strong></td>
-                            <td><strong>{{ 'Rp ' . number_format($total, 2) }}</strong></td>
+                            <td><strong>{{ 'Rp ' . number_format($total - $points * 100000, 2) }}</strong></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3"></td>
+                            <td colspan="2" class="text-left"><strong>Total Redeemed</strong></td>
+                            <td><strong>{{ '-' . number_format($points * 100000, 2) }}</strong></td>
                         </tr>
                         <tr>
                             <td colspan="3"></td>
                             <td colspan="2" class="text-left"><strong>Tax (11%)</strong>
                             </td>
-                            <td><strong>{{ 'Rp ' . number_format(($total * 11) / 100, 2) }}</strong></td>
+                            <td><strong>{{ 'Rp ' . number_format((($total - $points * 100000) * 11) / 100, 2) }}</strong></td>
                         </tr>
                         <tr>
                             <td colspan="3"></td>
                             <td colspan="2" class="text-left"><strong>Due Amount</strong></td>
                             <td>
-                                <strong>{{ 'Rp ' . number_format($total + ($total * 11) / 100 + ($total * 3) / 100, 2) }}</strong>
+                                <strong>{{ 'Rp ' . number_format( (($total - $points * 100000) + ((($total - $points * 100000) * 11) / 100)), 2 ) }}</strong>
                             </td>
                         </tr>
                     @endif
                 </tbody>
             </table>
-            <p>Your booking has been received successfully and we are looking forward to welcoming you.
-            </p>
+            <i>Your booking has been received successfully and we are looking forward to welcoming you.</i>
         </div>
     </div>
 

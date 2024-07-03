@@ -72,6 +72,7 @@ Route::middleware(['auth'])->group(function () {
     // Route::post('laralux/cart/addQty', [FrontEndController::class, 'addQuantity'])->name('addQty');
     // Route::post('laralux/cart/reduceQty', [FrontEndController::class, 'reduceQuantity'])->name('redQty');
     Route::post('laralux/cart/editCheckIn', [FrontEndController::class, 'editCheckIn'])->name('editCheckIn');
+    Route::post('laralux/cart/editPoints', [FrontEndController::class, 'editPoints'])->name('editPoints');
     Route::get('laralux/cart/checkout', [FrontEndController::class, 'checkout'])->name('laralux.checkout');
     Route::post('transaction/checkout', [TransactionController::class, 'checkout'])->name('checkout');
 });

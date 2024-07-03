@@ -83,8 +83,24 @@ class FrontEndController extends Controller
             $cart[$id]['duration'] = $duration;
         }
 
+        session()->put('points', 0);
+
         session()->put('cart', $cart);
         return response()->json(['status' => 'Check-in date updated successfully']);
+    }
+
+    public function editPoints(Request $request)
+    {
+        $points = $request->points;
+        $total = $request->total;
+        if (($points * 100000) > $total) {
+            $newPoints = floor($total / 100000);
+            session()->put('points', $newPoints);
+        } else {
+            session()->put('points', $points);
+        }
+
+        return response()->json(['status' => 'Points updated successfully with value: ' . $points]);
     }
 
 
@@ -111,20 +127,22 @@ class FrontEndController extends Controller
         $user = Auth::user();
         $customer = $user;
 
+        $points = session('points');
+
         $total = array_reduce($cart, function ($carry, $item) {
             return $carry + $item['duration'] * $item['price'];
         }, 0);
 
-        $points_redeemed = $request->points;
-        $pointsEarned = round(($total - $points_redeemed * 100000) /300000);
+        $pointsEarned = round(($total - $points * 100000) / 300000);
         $customer->points += $pointsEarned;
+        $customer->points -= $points;
         $customer->save();
 
         $t = new Transaction();
         $t->user_id = $user->id;
         $t->transaction_date = Carbon::now()->toDateTimeString();
         $t->points_earned = $pointsEarned;
-        $t->points_redeemed = $request->points;
+        $t->points_redeemed = $points;
         $t->save();
 
         $transactionId = $t->id;
@@ -146,7 +164,8 @@ class FrontEndController extends Controller
         $status = 'Your order on Laralux Reservation System is complete.';
 
         session()->forget('cart');
+        session()->put('points', 0);
 
-        return view('frontend.receipt', compact('cart', 'total', 'transaction', 'customer', 'status'));
+        return view('frontend.receipt', compact('cart', 'total', 'transaction', 'customer', 'status', 'points'));
     }
 }

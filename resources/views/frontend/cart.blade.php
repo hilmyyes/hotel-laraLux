@@ -15,6 +15,7 @@
                 <div class="table-responsive">
                     @php
                         $total = 0;
+                        $points = 0;
                     @endphp
 
                     <table class="table table-bordered">
@@ -62,6 +63,7 @@
                                     </tr>
                                     @php
                                         $total += $item['duration'] * $item['price'];
+                                        $points = session('points', 0);
                                     @endphp
                                 @endforeach
                                 <tr>
@@ -87,8 +89,9 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="coupon">
-                            <input type="number" min="0" max="{{ Auth::user()->points }}" value="0"
-                                name="points" id="points" oninput="updateTotal()">
+                            <strong>Points Redeemed:</strong>
+                            <input type="number" min="0" max="{{ Auth::user()->points }}"
+                                value="{{ $points }}" name="points" id="points" onchange="updatePoints()">
                         </div>
                     </div><br><br>
                     <div class="col-md-12">
@@ -101,26 +104,28 @@
                                     <tr>
                                         <th scope="row">Total Rooms Cost (exc. Tax)</th>
                                         <td>
-                                            <p>{{ 'Rp ' . number_format($total, 2) }}</p>
+                                            <p>{{ 'Rp ' . number_format($total - $points * 100000, 2) }}</p>
                                         </td>
                                     </tr>
 
-                                    <tr>
-                                        <th scope="row">Value of Points Redeemed (exc. Tax)</th>
-                                        <td id="pointsValue"></td>
-                                    </tr>
+                                    @if ($points > 0)
+                                        <tr>
+                                            <th scope="row">Total Redeemed</th>
+                                            <td id="pointsValue">{{ '-' . number_format($points * 100000, 2) }}</td>
+                                        </tr>
+                                    @endif
 
                                     <tr>
                                         <th scope="row">Tax (11%)</th>
                                         <td>
-                                            <p>{{ 'Rp ' . number_format(($total * 11) / 100, 2) }}</p>
+                                            <p>{{ 'Rp ' . number_format((($total - $points * 100000) * 11) / 100, 2) }}</p>
                                         </td>
                                     </tr>
                                     <tr>
                                         <th scope="row">Points Earned:</th>
                                         <td>
                                             <p>
-                                                {{ '+ ' . number_format($total / 300000) }}
+                                                {{ '+ ' . number_format(($total - $points * 100000) / 300000) }}
                                             </p>
                                         </td>
                                     </tr>
@@ -128,7 +133,7 @@
                                         <th scope="row">Due Amount</th>
                                         <td>
                                             <p>
-                                                <b>{{ 'Rp ' . number_format($total + ($total * 11) / 100 + ($total * 3) / 100, 2) }}</b>
+                                                <b>{{ 'Rp ' . number_format($total - $points * 100000 + (($total - $points * 100000) * 11) / 100, 2) }}</b>
                                             </p>
                                         </td>
                                     </tr>
@@ -154,6 +159,7 @@
                 var $this = $(this);
                 var startDate = $(this).data('checkin_date');
                 var duration = parseInt($(this).data('duration'));
+                var total = {{ $total }};
 
                 $this.daterangepicker({
                     opens: 'left',
@@ -181,6 +187,7 @@
                             'id': id,
                             'checkin_date': startDate,
                             'duration': duration,
+                            'total': total,
                         },
                         success: function(data) {
                             location.reload();
@@ -190,11 +197,25 @@
             });
         });
 
-        function updateTotal() {
+        function updatePoints() {
             var points = document.getElementById('points').value;
-            var valueRedeemed = points * 100000;
-
-            document.getElementById('pointsValue').textContent = ' - Rp ' + valueRedeemed;
+            var total = {{ $total }};
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('editPoints') }}',
+                data: {
+                    '_token': '{{ csrf_token() }}',
+                    'points': points,
+                    'total': total,
+                },
+                success: function(data) {
+                    console.log('Points updated successfully');
+                    location.reload();
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error updating points:', error);
+                }
+            });
         }
     </script>
 @endsection
