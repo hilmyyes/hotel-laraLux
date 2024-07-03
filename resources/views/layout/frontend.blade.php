@@ -37,7 +37,7 @@
 
                 <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                     <div class="navbar-nav mr-auto">
-                        <a href="{{ route('laralux.index') }}" class="nav-item nav-link">Home</a>
+                        <a href="{{ route('welcome') }}" class="nav-item nav-link">Home</a>
                         {{-- <a href="product-list.html" class="nav-item nav-link">Products</a>
                             <a href="product-detail.html" class="nav-item nav-link">Product Detail</a>
                             <a href="cart.html" class="nav-item nav-link">Cart</a>
