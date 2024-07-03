@@ -82,7 +82,9 @@ Route::middleware(['auth'])->group(function () {
         FrontEndController::class,
         'show'
     ])->name('laralux.show');
+    Route::get('laralux/hotel/{id}', [FrontEndController::class, 'hotel'])->name('laralux.hotel');
     Route::get('laralux/cart/add/{id}', [FrontEndController::class, 'addToCart'])->name('addCart');
+    Route::get('laralux/cart/shop/{id}', [FrontEndController::class, 'shop'])->name('shop');
     Route::get('laralux/cart/delete/{id}', [FrontEndController::class, 'deleteFromCart'])->name('delFromCart');
     Route::post('laralux/cart/changeQuantity', [FrontEndController::class, 'changeQuantity'])->name('changeQuantity');
     // Route::post('laralux/cart/addQty', [FrontEndController::class, 'addQuantity'])->name('addQty');
