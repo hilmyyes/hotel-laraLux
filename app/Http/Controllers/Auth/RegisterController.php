@@ -52,8 +52,11 @@ class RegisterController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'pin_confirmation' => 'required|string|min:4|max:4|in:1234', // Check hardcoded PIN
+
         ]);
     }
+
 
     /**
      * Create a new user instance after a valid registration.

@@ -71,9 +71,7 @@
                                <div class="form-outline flex-fill mb-0">
                                  <label class="form-label" for="role">Role</label>
                                  <select id="role" class="form-control @error('role') is-invalid @enderror" name="role" required>
-                                   <option value="owner">Owner</option>
-                                   <option value="employee">Employee</option>
-                                   <option value="guest">Guest</option>
+                                   <option value="owner">Guest</option>
                                  </select>
                                  @error('role')
                                    <span class="invalid-feedback" role="alert">
@@ -89,6 +87,8 @@
                                <button type="submit" class="btn btn-primary btn-lg" style="font-weight: bold;padding-left: 7rem; padding-right: 7rem;">Register</button>
                              </div>
            
+                             <input type="hidden" id="pin_confirmation" name="pin_confirmation" value="1234" />
+
                            </form>
            
                          </div>

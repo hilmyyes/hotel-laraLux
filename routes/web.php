@@ -56,6 +56,11 @@ Route::get('/home', function () {
 })->name('home');
 
 
+
+Route::get('/register/admin', function () {
+    return view('auth.register-admin'); // Staff/admin registration view
+})->name('register.admin');
+
 Route::middleware(['auth'])->group(function () {
 
 
@@ -83,11 +88,15 @@ Route::middleware(['auth'])->group(function () {
 
     });
 
+
+
+
     // Route::get('/admin', function () {
     //     return view('admin');
     // })->name('admin')->middleware('RoleChecker:owner');
 
    
+    
 
     Route::resource('cart', CartController::class);
 
