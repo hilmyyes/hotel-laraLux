@@ -87,64 +87,76 @@
         <div class="col-lg-4">
             <div class="cart-page-inner">
                 <div class="row">
-                    <div class="col-md-12">
-                        <strong>Points available: {{ Auth::user()->points }}</strong>
-                        <div class="coupon">
-                            <strong>Redeem Points:</strong>
-                            <input type="number" min="0" max="{{ Auth::user()->points }}"
-                                value="{{ session('points', 0) }}" name="points" id="points" onchange="updatePoints()">
-                        </div>
-                    </div><br><br>
+                    @if (session('cart'))
+                        <div class="col-md-12">
+                            <strong>Points available: {{ Auth::user()->points }}</strong>
+                            <div class="coupon">
+                                <strong>Redeem Points:</strong>
+                                <input type="number" min="0" max="{{ Auth::user()->points }}"
+                                    value="{{ session('points', 0) }}" name="points" id="points"
+                                    onchange="updatePoints()">
+                            </div>
+                        </div><br><br>
+                    @endif
                     <div class="col-md-12">
                         <h1>Cart Summary</h1>
                     </div>
-                    <div class="col-md-12">
-                        <div class="cart-summary">
-                            <div class="customer-details">
-                                <table class="table">
-                                    <tr>
-                                        <th scope="row">Total Rooms Cost (exc. Tax & Points)</th>
-                                        <td>
-                                            {{ 'Rp ' . number_format($total, 2) }}
-                                        </td>
-                                    </tr>
-
-                                    @if ($pointsSession > 0)
+                    @if (session('cart'))
+                        <div class="col-md-12">
+                            <div class="cart-summary">
+                                <div class="customer-details">
+                                    <table class="table">
                                         <tr>
-                                            <th scope="row">Value Points Redeemed</th>
-                                            <td id="pointsValue">{{ '-' . number_format($pointsSession * 100000, 2) }}</td>
+                                            <th scope="row">Total Rooms Cost (exc. Tax & Points)</th>
+                                            <td>
+                                                {{ 'Rp ' . number_format($total, 2) }}
+                                            </td>
                                         </tr>
-                                    @endif
 
-                                    <tr>
-                                        <th scope="row">Tax (11%)</th>
-                                        <td>
-                                            {{ 'Rp ' . number_format((($total - $pointsSession * 100000) * 11) / 100, 2) }}
-                                        </td>
-                                    </tr>
-                                    @if(floor(($total - $pointsSession * 100000) / 300000) > 0)
-                                    <tr>
-                                        <th scope="row">Points Earned:</th>
-                                        <td>
-                                            {{ '+' . floor(($total - $pointsSession * 100000) / 300000) }}
-                                        </td>
-                                    </tr>
-                                    @endif
-                                    <tr>
-                                        <th scope="row">Due Amount</th>
-                                        <td>
-                                            <b>{{ 'Rp ' . number_format($total - $pointsSession * 100000 + (($total - $pointsSession * 100000) * 11) / 100, 2) }}</b>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </div>
-                            <div class="cart-btn d-flex ">
-                                <a class="btn btn-xs" href="{{ route('laralux.index') }}">Continue Shopping</a>
-                                <a class="btn btn-xs mr-5" href="{{ route('laralux.checkout') }}"
-                                    style="margin-left: 155px">Checkout</a>
+                                        @if ($pointsSession > 0)
+                                            <tr>
+                                                <th scope="row">Value Points Redeemed</th>
+                                                <td id="pointsValue">{{ '-' . number_format($pointsSession * 100000, 2) }}
+                                                </td>
+                                            </tr>
+                                        @endif
+
+                                        <tr>
+                                            <th scope="row">Tax (11%)</th>
+                                            <td>
+                                                {{ 'Rp ' . number_format((($total - $pointsSession * 100000) * 11) / 100, 2) }}
+                                            </td>
+                                        </tr>
+                                        @if (floor(($total - $pointsSession * 100000) / 300000) > 0)
+                                            <tr>
+                                                <th scope="row">Points Earned:</th>
+                                                <td>
+                                                    {{ '+' . floor(($total - $pointsSession * 100000) / 300000) }}
+                                                </td>
+                                            </tr>
+                                        @endif
+                                        <tr>
+                                            <th scope="row">Due Amount</th>
+                                            <td>
+                                                <b>{{ 'Rp ' . number_format($total - $pointsSession * 100000 + (($total - $pointsSession * 100000) * 11) / 100, 2) }}</b>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="cart-btn d-flex ">
+                                    <a class="btn btn-xs" href="{{ route('laralux.index') }}">Continue Shopping</a>
+                                    <a class="btn btn-xs mr-5" href="{{ route('laralux.checkout') }}"
+                                        style="margin-left: 155px">Checkout</a>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    @else
+                        <div class="col-md-12">
+                            <h5>
+                                No Items... Yet!
+                            </h5>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>

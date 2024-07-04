@@ -2,6 +2,15 @@
 @section('content')
     <div class="product-detail">
         <div class="container-fluid">
+            <strong>
+                <h1>TRANSACTION DETAIL</h1>
+                <h4>User: {{ Auth::User()->name }}</h4>
+                <h4>Transaction ID: {{ $transaction->id }}</h4><br>
+                <div class="cart-btn d-flex ">
+                    <a class="btn btn-xs" href="{{ route('laporan') }}">Go Back to History</a>
+                </div>
+                <br>
+            </strong>
             <div class="row">
                 <div class="col-lg-8">
                     <div class="product-detail-top">
@@ -19,37 +28,66 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @forelse ($transaction->products as $t)
+                                        @foreach ($transaction->products as $product)
                                             <tr>
-                                                <td class="text-center">{{ $t->name }}</td>
+                                                <td class="text-center">{{ $product->name }}</td>
                                                 <td class="align-middle">
                                                     <div class="img d-flex justify-content-center align-items-center">
-                                                        @if ($t->image == null)
+                                                        @if ($product->image == null)
                                                             <img src="{{ asset('images/blank.jpg') }}" alt="Default Image"
                                                                 class="img-fluid">
                                                         @else
-                                                            <img src="{{ asset('images/' . $t->image) }}"
-                                                                alt="{{ $t->name }} Image" class="img-fluid">
+                                                            <img src="{{ asset('images/' . $product->image) }}"
+                                                                alt="{{ $product->name }} Image" class="img-fluid">
                                                         @endif
                                                     </div>
                                                 </td>
                                                 <td class="text-center">
-                                                    {{ date('d/m/Y', strtotime($t->checkin_date)) }}</td>
-                                                <td class="text-center">
-                                                    {{ date('d/m/Y', strtotime($t->checkin_date)) }}</td>
+                                                    {{ date('d/m/Y', strtotime($product->pivot->checkin_date)) }}
                                                 </td>
                                                 <td class="text-center">
-                                                    {{ 'Rp ' . number_format($t->subtotal, 2) }}
+                                                    {{ date('d/m/Y', strtotime($product->pivot->checkin_date)) }}
                                                 </td>
                                                 <td class="text-center">
-                                                    {{ 'Rp ' . number_format($t->subtotal * 1.11, 2) }}
+                                                    {{ 'Rp ' . number_format($product->pivot->subtotal, 2) }}
+                                                </td>
+                                                <td class="text-center">
+                                                    {{ 'Rp ' . number_format($product->pivot->subtotal * 1.11, 2) }}
                                                 </td>
                                             </tr>
-                                        @empty
-                                            <tr>
-                                                <td colspan="8" class="text-center">No transaction in history</td>
-                                            </tr>
-                                        @endforelse
+                                        @endforeach
+                                        <tr>
+                                            <td colspan="3"></td>
+                                            <td colspan="2" class="text-left"><strong>Total Rooms Cost (exc. Tax &
+                                                    Points)</strong></td>
+                                            <td><strong>{{ 'Rp ' . number_format($transaction->products->sum('pivot.subtotal'), 2) }}</strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="3"></td>
+                                            <td colspan="2" class="text-left"><strong>Value Points Redeemed</strong></td>
+                                            <td><strong>{{ '-' . number_format($transaction->points_redeemed * 100000, 2) }}</strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="3"></td>
+                                            <td colspan="2" class="text-left"><strong>Tax (11%)</strong>
+                                            </td>
+                                            <td><strong>{{ 'Rp ' . number_format((($transaction->products->sum('pivot.subtotal') - $transaction->points_redeemed * 100000) * 11) / 100, 2) }}</strong>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="3"></td>
+                                            <td colspan="2" class="text-left"><strong>Points Earned:</strong>
+                                            </td>
+                                            <td><strong>{{ '+' . floor(($transaction->products->sum('pivot.subtotal') - $transaction->points_redeemed * 100000) / 300000) }}</strong>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="3"></td>
+                                            <td colspan="2" class="text-left"><strong>Due Amount</strong></td>
+                                            <td>
+                                                <strong>{{ 'Rp ' . number_format($transaction->products->sum('pivot.subtotal') - $transaction->points_redeemed * 100000 + (($transaction->products->sum('pivot.subtotal') - $transaction->points_redeemed * 100000) * 11) / 100, 2) }}</strong>
+                                            </td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>

@@ -2,7 +2,12 @@
 @section('content')
     <div class="product-detail">
         <div class="container-fluid">
-            <div class="row">
+            <strong>
+                <h1>TRANSACTION HISTORY</h1>
+                <h4>User: {{ Auth::User()->name }}</h4>
+                <br>
+            </strong>
+            <div class=<div class="row">
                 <div class="col-lg-8">
                     <div class="product-detail-top">
                         <div class="row align-items-center">
@@ -39,13 +44,18 @@
                                                         -
                                                     @endif
                                                 </td>
+
                                                 <td class="text-center">
                                                     {{ 'Rp ' . number_format($t->products->sum('pivot.subtotal') * 1.11 - $t['points_redeemed'] * 100000, 2) }}
                                                 </td>
-                                                <td class="text-center">{{ $t['points_earned'] }}</td>
+
+                                                @if ($t['points_earned'] > 0)
+                                                    <td class="text-center">{{ '+' . $t['points_earned'] }}</td>
+                                                @else
+                                                    <td class="text-center">-</td>
+                                                @endif
                                                 <td class="text-center">
-                                                    <a href="{{ route('detail', $t->id) }}"><i
-                                                        class="fa fa-search"></i></a>
+                                                    <a href="{{ route('detail', $t->id) }}"><i class="fa fa-search"></i></a>
                                                 </td>
                                             </tr>
                                         @empty
