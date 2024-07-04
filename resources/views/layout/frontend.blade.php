@@ -37,8 +37,15 @@
 
                 <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                     <div class="navbar-nav mr-auto">
-                        <a href="{{ route('welcome') }}" class="nav-item nav-link">Home</a>
-                        <a href="{{ route('laporan') }}" class="nav-item nav-link">Transaction History</a>
+                        <a href="{{ route('welcome') }}" class="nav-item nav-link mr-5">Home</a>
+                        <a href="{{ route('laralux.index') }}" class="nav-item nav-link mr-5">Hotel</a>
+                        <a href="{{ route('laralux.index') }}" class="nav-item nav-link mr-5">Produk</a>
+
+
+                        @if (Auth::check())
+                        <a href="{{ route('laporan') }}" class="nav-item nav-link mr-">Transaction History</a>
+                        @endif
+
                         {{-- <a href="product-list.html" class="nav-item nav-link">Products</a>
                             <a href="product-detail.html" class="nav-item nav-link">Product Detail</a>
                             <a href="cart.html" class="nav-item nav-link">Cart</a>
@@ -106,9 +113,14 @@
                     </div>
                 </div> --}}
                 <div class="navbar-nav ml-auto">
-                    <div class="user">
-                        <span><h4>Points: {{ Auth::user()->points }}</h4></span>
-                        <a href="{{ route('cart') }}" class="btn cart">
+                    <div class="user d-flex align-items-center">
+                        @if (Auth::check())
+                            <span>
+                                <h5 style="color:green">Points: {{ Auth::user()->points }}</h5>
+                            </span>
+                        @endif
+
+                        <span class="nav-item nav-link px-2">|</span> <a href="{{ route('cart') }}" class="btn cart">
                             <i class="fa fa-shopping-cart"></i>
                             <span>
                                 @if (session('cart'))
