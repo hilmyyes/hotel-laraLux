@@ -17,7 +17,7 @@ class Hotel extends Model
     //dan liat di slide
 
 
-    public  function products(): HasMany
+    public function products(): HasMany
     {
         return $this->hasMany(Product::class, 'hotel_id', 'id'); // hasmany buat many karena 1 hotel bisa banyak product
     }

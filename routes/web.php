@@ -113,6 +113,7 @@ Route::middleware(['auth'])->group(function () {
         FrontEndController::class,
         'show'
     ])->name('laralux.show');
+    Route::get('laporan/hotel/all', [FrontEndController::class, 'hotelall'])->name('hotelall');
     Route::get('laralux/hotel/{id}', [FrontEndController::class, 'hotel'])->name('laralux.hotel');
     Route::get('laralux/cart/add/{id}', [FrontEndController::class, 'addToCart'])->name('addCart');
     Route::get('laralux/cart/shop/{id}', [FrontEndController::class, 'shop'])->name('shop');

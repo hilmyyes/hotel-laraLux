@@ -27,6 +27,12 @@ class FrontEndController extends Controller
         return view('frontend.hotel', compact('hotel', 'products'));
     }
 
+    public function hotelall()
+    {
+        $hotel = Hotel::all();
+        return view('frontend.hotelall', compact('hotel'));
+    }
+
     public function show($id)
     {
         $product = Product::find($id);
