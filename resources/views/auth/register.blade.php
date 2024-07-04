@@ -71,7 +71,7 @@
                                <div class="form-outline flex-fill mb-0">
                                  <label class="form-label" for="role">Role</label>
                                  <select id="role" class="form-control @error('role') is-invalid @enderror" name="role" required>
-                                   <option value="owner">Guest</option>
+                                   <option value="guest">Guest</option>
                                  </select>
                                  @error('role')
                                    <span class="invalid-feedback" role="alert">
