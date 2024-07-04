@@ -29,17 +29,7 @@
                                 <th>Action</th>
                             </tr>
                         </thead>
-                        <tfoot>
-                            <tr>
-                                <th>Image</th>
-                                <th>Name</th>
-                                <th>List Product</th>
-                                <th>Address</th>
-                                <th>Hotel Type</th>
-                                <th>City</th>
-                                <th>Action</th>
-                            </tr>
-                        </tfoot>
+                        
                         <tbody>
                             @foreach ($hotels as $hotel)
                                 <tr>
