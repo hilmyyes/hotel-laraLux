@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -62,9 +60,9 @@
                     <li><a href="{{ route('produk.index') }}">Produk</a></li>
                     <li><a href="{{ route('kategori') }}">Kategori</a></li>
                     <li><a href="{{ route('report') }}">Report</a></li> --}}
-                    <li><a href="{{ route("laralux.index") }}">Hotel</a></li>
-                    <li><a href="{{ route("laralux.index") }}">Produk</a></li>
-                    <li><a href="{{ route("laralux.index") }}">Kategori</a></li>
+                    <li><a href="{{ route('laralux.index') }}">Hotel</a></li>
+                    <li><a href="{{ route('laralux.index') }}">Produk</a></li>
+                    <li><a href="{{ route('laralux.index') }}">Kategori</a></li>
                     <li><a href="{{ route('laralux.index') }}">Booking</a></li>
 
                     {{-- <li><a href="{{ route('promo') }}">Promo</a></li> --}}
@@ -120,8 +118,13 @@
                 <div class="row">
                     <div class="col-lg-10">
                         @if (Auth::check())
-                            <h2 data-aos="fade-up" data-aos-delay="50">Selamat Datang {{ Auth::user()->name }} 👋👋</h2>
+                            <p style="color: lightgreen;font-weight: bold;" data-aos="fade-up" data-aos-delay="50">Total
+                                Point Kamu: {{ Auth::user()->points }}
+                            </p>
+                            <h2 data-aos="fade-up" data-aos-delay="50">Selamat Datang {{ Auth::user()->name }} 👋👋
+                            </h2>
                         @endif
+
                         <h2 data-aos="fade-up" data-aos-delay="100">Tempat Cari Hotel se Indonesia</h2>
                         <p data-aos="fade-up" data-aos-delay="200">Update Informasi berkala dengan tulis emailmu disini
                         </p>
@@ -161,7 +164,7 @@
                 <div class="col-lg-2 col-6 footer-links">
                     <h4>Useful Links</h4>
                     <ul>
-                        <li><a href="{{ route("laralux.index") }}">Home</a></li>
+                        <li><a href="{{ route('laralux.index') }}">Home</a></li>
                         <li><a href="#">About us</a></li>
                         <li><a href="#">Services</a></li>
                         <li><a href="#">Terms of service</a></li>
