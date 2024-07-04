@@ -124,6 +124,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('laralux/cart/editPoints', [FrontEndController::class, 'editPoints'])->name('editPoints');
     Route::get('laralux/cart/checkout', [FrontEndController::class, 'checkout'])->name('laralux.checkout');
     Route::post('transaction/checkout', [TransactionController::class, 'checkout'])->name('checkout');
+    Route::get('report/transaction-history', [FrontEndController::class, 'laporan'])->name('laporan');
+    Route::get('report/transaction-detail/{id}', [FrontEndController::class, 'detail'])->name('detail');
 });
 
 Route::resource('type', TypeController::class)->middleware('auth');

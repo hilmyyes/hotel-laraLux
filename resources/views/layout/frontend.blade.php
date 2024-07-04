@@ -38,6 +38,7 @@
                 <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                     <div class="navbar-nav mr-auto">
                         <a href="{{ route('welcome') }}" class="nav-item nav-link">Home</a>
+                        <a href="{{ route('laporan') }}" class="nav-item nav-link">Transaction History</a>
                         {{-- <a href="product-list.html" class="nav-item nav-link">Products</a>
                             <a href="product-detail.html" class="nav-item nav-link">Product Detail</a>
                             <a href="cart.html" class="nav-item nav-link">Cart</a>
@@ -53,34 +54,34 @@
                             </div> --}}
                     </div>
                     @if (Auth::user())
-                    <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle"
-                            data-toggle="dropdown">{{ Auth::user()->name }}
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="{{ route('logout') }}"
-                                onclick="event.preventDefault();
-                                                             document.getElementById('logout-form').submit();">
-                                {{ __('Logout') }}
-                            </a>
-
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                @csrf
-                            </form>
-                        </div>
-                    </div>
-                    @else
-                    <div class="navbar-nav ml-auto">
                         <div class="nav-item dropdown">
-                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">User
-                                Account</a>
-                            <div class="dropdown-menu">
-                                <a href="/login" class="dropdown-item">Login</a>
-                                <a href="/register" class="dropdown-item">Register</a>
+                            <a href="#" class="nav-link dropdown-toggle"
+                                data-toggle="dropdown">{{ Auth::user()->name }}
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="{{ route('logout') }}"
+                                    onclick="event.preventDefault();
+                                                             document.getElementById('logout-form').submit();">
+                                    {{ __('Logout') }}
+                                </a>
+
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                    @csrf
+                                </form>
                             </div>
                         </div>
-                    </div>
-                @endif
+                    @else
+                        <div class="navbar-nav ml-auto">
+                            <div class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">User
+                                    Account</a>
+                                <div class="dropdown-menu">
+                                    <a href="/login" class="dropdown-item">Login</a>
+                                    <a href="/register" class="dropdown-item">Register</a>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
                 </div>
             </nav>
         </div>
@@ -106,6 +107,7 @@
                 </div> --}}
                 <div class="navbar-nav ml-auto">
                     <div class="user">
+                        <span><h4>Points: {{ Auth::user()->points }}</h4></span>
                         <a href="{{ route('cart') }}" class="btn cart">
                             <i class="fa fa-shopping-cart"></i>
                             <span>
@@ -122,7 +124,7 @@
         </div>
     </div>
     <!-- Bottom Bar End -->
-    
+
     <!-- Breadcrumb End -->
     @if (session('status'))
         <div class="alert alert-success">
@@ -191,7 +193,7 @@
                 </div>
             </div>
 
-        
+
         </div>
     </div>
     <!-- Footer End -->

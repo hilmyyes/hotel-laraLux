@@ -110,7 +110,6 @@ class FrontEndController extends Controller
         $id = $request->id;
         $checkin_date = $request->checkin_date;
         $duration = $request->duration;
-        $total = $request->total;
         $cart = session()->get('cart');
 
         session()->put('points', 0);
@@ -211,5 +210,15 @@ class FrontEndController extends Controller
         session()->put('points', 0);
 
         return view('frontend.receipt', compact('cart', 'total', 'transaction', 'customer', 'status', 'points'));
+    }
+
+    public function laporan(){
+        $transactions = Transaction::where('user_id', Auth::user()->id)->get();
+        return view('frontend.laporan', compact('transactions'));
+    }
+
+    public function detail($id){
+        $transaction = Transaction::find($id);
+        return view('frontend.detail', compact('transaction'));
     }
 }
