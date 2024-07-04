@@ -60,10 +60,8 @@
                     <li><a href="{{ route('produk.index') }}">Produk</a></li>
                     <li><a href="{{ route('kategori') }}">Kategori</a></li>
                     <li><a href="{{ route('report') }}">Report</a></li> --}}
-                    <li><a href="{{ route('laralux.index') }}">Hotel</a></li>
-                    <li><a href="{{ route('laralux.index') }}">Produk</a></li>
-                    <li><a href="{{ route('laralux.index') }}">Kategori</a></li>
-                    <li><a href="{{ route('laralux.index') }}">Booking</a></li>
+                    <li><a href="{{ route('hotelall') }}">Hotels</a></li>
+                    <li><a href="{{ route('laralux.index') }}">Products</a></li>
 
                     {{-- <li><a href="{{ route('promo') }}">Promo</a></li> --}}
                     {{-- <li><a href="{{ route('info') }}">Info</a></li>

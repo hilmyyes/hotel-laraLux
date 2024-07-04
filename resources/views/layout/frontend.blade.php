@@ -39,8 +39,8 @@
                     <div class="navbar-nav mr-auto">
 
                         <a href="{{ route('welcome') }}" class="nav-item nav-link mr-5">Home</a>
-                        <a href="{{ route('laralux.index') }}" class="nav-item nav-link mr-5">Hotel</a>
-                        <a href="{{ route('laralux.index') }}" class="nav-item nav-link mr-5">Produk</a>
+                        <a href="{{ route('hotelall') }}" class="nav-item nav-link mr-5">Hotels</a>
+                        <a href="{{ route('laralux.index') }}" class="nav-item nav-link mr-5">Products</a>
 
 
                         @if (Auth::check())
