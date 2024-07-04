@@ -23,14 +23,14 @@
                     <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                         <thead>
                             <tr>
-                                <th>Tanggal Transaction</th>
-                                <th>Customer</th>
-                                <th>Hotel</th>
-                                <th>Produk</th>
-                                <th>Tanggal check_in</th>
-                                <th>Durasi</th>
-                                <th>Total Harga</th>
-                                <th>Action</th>
+                                <th class="text-center">Tanggal Transaction</th>
+                                <th class="text-center">Customer</th>
+                                <th class="text-center">Hotel</th>
+                                <th class="text-center">Produk</th>
+                                <th class="text-center">Tanggal check_in</th>
+                                <th class="text-center">Durasi (Hari)</th>
+                                <th class="text-center">Total Harga</th>
+                                <th class="text-center">Action</th>
                             </tr>
                         </thead>
                         {{-- <tfoot>
@@ -90,7 +90,7 @@
                                     <td>
                                         <ul>
                                             @foreach ($d->products as $product)
-                                                <li>
+                                                <li class="text-left">
                                                     {{ $product->pivot->duration }}
                                                 </li>
                                             @endforeach

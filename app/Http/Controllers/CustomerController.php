@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Customer;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -33,19 +34,23 @@ class CustomerController extends Controller
      */
     public function store(Request $request)
     {
-        // $request->validate([
-        //     'name' => 'required',
-        //     'address' => 'required'
-        // ]);
+        $data = new User();
+        $hotel_name = $request->form_name;
+        $address = $request->form_email;
+        $phone_number = $request->form_password;
+        $email = $request->form_role;
 
-        // // Type::create($request->all());
+        $data->name = $hotel_name;
+        $data->email = $address;
+        $data->password = $phone_number;
+        $data->role = 'guest';
+        $data->points = 0;
+        $data->remember_token = $data->getRememberToken();
+        $data->created_at = now();
+        $data->updated_at = now();
 
-        // $data = new User();
-        // $data->name = $request->get('name');
-        // $data->address = $request->get('address');
-        // $data->save();
-
-        // return redirect('customer')->with('status', 'Berhasil Tambah');
+        $data->save();
+        return redirect()->route('customer.index')->with('status','Data successfully added');
     }
 
     /**

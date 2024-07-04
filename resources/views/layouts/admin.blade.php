@@ -20,6 +20,15 @@
     <!-- Custom styles for this template-->
     <link href="{{ asset('admin/css/sb-admin-2.min.css') }}" rel="stylesheet">
 
+    <style>
+        .text-center {
+            text-align: center;
+        }
+
+        .text-left{
+            text-align: left;
+        }
+    </style>
 </head>
 
 <body id="page-top">
@@ -159,25 +168,25 @@
 
 
 
-                       <!-- Untuk Report/Rekap -->
-                       <li class="nav-item">
-                        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseRekap"
-                            aria-expanded="true" aria-controls="collapseRekap">
-                            <i class="fa fa-book"></i>
-                            <span>Laporan/Rekap</span>
-                        </a>
-                        <div id="collapseRekap" class="collapse" aria-labelledby="headingHotel" data-parent="#accordionSidebar">
-                            <div class="bg-white py-2 collapse-inner rounded">
-                                <h6 class="collapse-header">Laporan:</h6>
-                                <a class="collapse-item" href="{{ route('laporan') }}"> Laporan Pertama </a>
-                                <a class="collapse-item" href="{{ route('laporan') }}"> Laporan Kedua </a>
+            <!-- Untuk Report/Rekap -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseRekap"
+                    aria-expanded="true" aria-controls="collapseRekap">
+                    <i class="fa fa-book"></i>
+                    <span>Laporan/Rekap</span>
+                </a>
+                <div id="collapseRekap" class="collapse" aria-labelledby="headingHotel" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Laporan:</h6>
+                        <a class="collapse-item" href="{{ route('laporan') }}"> Laporan Pertama </a>
+                        <a class="collapse-item" href="{{ route('laporan') }}"> Laporan Kedua </a>
 
-                                {{-- <h6 class="collapse-header">Type of Hotel:</h6> --}}
-                            </div>
-        
-                        </div>
-                    </li>
-        
+                        {{-- <h6 class="collapse-header">Type of Hotel:</h6> --}}
+                    </div>
+
+                </div>
+            </li>
+
 
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
